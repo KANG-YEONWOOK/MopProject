@@ -28,17 +28,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.R
+import com.example.cofinder.ui.theme.Typography
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -59,15 +56,6 @@ fun LoginScreen(navController: NavHostController) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-
-    val fontFamily = FontFamily(
-        fonts = listOf(
-            Font(R.font.gmarket_sans_ttf_medium, FontWeight.Medium),
-            Font(R.font.gmarket_sans_ttf_bold, FontWeight.Bold),
-            Font(R.font.gmarket_sans_ttf_light, FontWeight.Light)
-        )
-    )
-
 
     val buttonColor1 = ButtonDefaults.buttonColors(
         containerColor = colorResource(id = R.color.darkgreen),
@@ -95,9 +83,7 @@ fun LoginScreen(navController: NavHostController) {
 
     Scaffold(topBar = { Text(text = "CO-Finder",
         modifier = Modifier.padding(16.dp),
-        fontSize = 28.sp,
-        fontFamily = fontFamily,
-        fontWeight = FontWeight.ExtraBold,
+        style = Typography.titleMedium,
         color = colorResource(id = R.color.darkgreen))}) {
         Column(modifier = Modifier
             .fillMaxSize()
@@ -105,10 +91,10 @@ fun LoginScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-            Text("로그인", fontSize = 36.sp, fontFamily=fontFamily,modifier = Modifier.padding(8.dp),
+            Text("로그인", style = Typography.titleLarge, modifier = Modifier.padding(8.dp),
                 color = colorResource(id = R.color.darkgreen))
-            Text("로그인 후 Co-Finder의 다양한 서비스를 이용하세요!", fontSize = 10.sp, fontFamily=fontFamily,
-                modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 16.dp), color = colorResource(id = R.color.lightgreen))
+            Text("로그인 후 당신의 팀원을 찾으세요!", style = Typography.bodySmall,
+                modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 12.dp), color = colorResource(id = R.color.lightgreen))
             OutlinedTextField(
                 value = userID,
                 onValueChange = {userID = it},
@@ -118,7 +104,7 @@ fun LoginScreen(navController: NavHostController) {
                 label = {
                     Text(text = "아이디를 입력해주세요.",
                         color = colorResource(id = R.color.darkgreen),
-                        fontFamily = fontFamily)
+                        style = Typography.bodyMedium)
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions(onNext = {
@@ -135,7 +121,7 @@ fun LoginScreen(navController: NavHostController) {
                     Text(
                         text = "비밀번호를 입력해주세요.",
                         color = colorResource(id = R.color.darkgreen),
-                        fontFamily = fontFamily
+                        style = Typography.bodyMedium
                     )
                 },
                 visualTransformation = PasswordVisualTransformation(),
@@ -149,7 +135,6 @@ fun LoginScreen(navController: NavHostController) {
             Button(modifier = Modifier.padding(12.dp).width(280.dp),
                 colors = buttonColor1,
                 onClick = {
-
                     navController.navigate(Routes.Home.route) {
                         popUpTo(Routes.Home.route) {
                             saveState = true
@@ -159,12 +144,12 @@ fun LoginScreen(navController: NavHostController) {
                         restoreState = true
                     }
                 }) {
-                Text("로그인", fontFamily = fontFamily, modifier = Modifier.padding(6.dp))
+                Text("로그인", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
             }
             Button(modifier = Modifier.padding(6.dp).width(280.dp),
                 colors = buttonColor2,
-                onClick = { /*TODO*/ }) {
-                Text("회원가입", fontFamily = fontFamily, modifier = Modifier.padding(6.dp))
+                onClick = { navController.navigate(Routes.Register.route) }) {
+                Text("회원가입", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
             }
 
         }
