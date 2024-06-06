@@ -31,9 +31,6 @@ fun Main(navController: NavHostController) {
                     LoginScreen(navController = navController)
                 }
 
-                composable(Routes.Register.route){
-                    RegisterScreen(navController)
-                }
                 MainNavGraph(navController)
             }
         }

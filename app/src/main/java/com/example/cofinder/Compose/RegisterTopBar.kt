@@ -19,31 +19,21 @@ import com.example.cofinder.R
 import com.example.cofinder.ui.theme.Typography
 
 @Composable
-fun TopBar(navController: NavController) {
+fun RegisterTopBar(navController: NavController) {
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween) {
-        IconButton(onClick={navController.navigate(Routes.Home.route){
-            popUpTo(Routes.Home.route) {
-                saveState = true
+        IconButton(onClick={navController.navigate(Routes.Login.route){
+            popUpTo(0) {
                 inclusive = true
             }
             launchSingleTop = true
-            restoreState = true
         } }){
-            Icon(Icons.Default.ArrowBackIosNew,null,tint = colorResource(id = R.color.darkgreen))
+            Icon(Icons.Default.ArrowBackIosNew,null, tint = colorResource(id = R.color.darkgreen))
         }
         Text("Co-Finder",
-            modifier = Modifier.padding(top=16.dp, end = 16.dp),
+            modifier = Modifier.padding(top=12.dp, end = 16.dp),
             style = Typography.titleMedium,
             color = colorResource(id = R.color.darkgreen))
     }
-
-//홈으로 돌아가는 뒤로가기 버튼
-//    Scaffold (topBar = {
-//        TopBar(navController = navController)
-//    }){
-//        //화면구성
-//    }
-//이런식으로 사용
 
 }
