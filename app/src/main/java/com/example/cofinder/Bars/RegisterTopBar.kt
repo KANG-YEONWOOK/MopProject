@@ -1,4 +1,4 @@
-package com.example.cofinder.Compose
+package com.example.cofinder.Bars
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
