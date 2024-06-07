@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.cofinder.Compose.BottomBar
+import com.example.cofinder.Bars.BottomBar
 import com.example.cofinder.Navigation.MainNavGraph
 import com.example.cofinder.Navigation.Routes
 

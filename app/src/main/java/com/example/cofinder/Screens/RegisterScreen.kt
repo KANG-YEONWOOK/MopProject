@@ -32,7 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.cofinder.Compose.RegisterTopBar
+import com.example.cofinder.Bars.RegisterTopBar
 import com.example.cofinder.R
 import com.example.cofinder.ui.theme.Typography
 

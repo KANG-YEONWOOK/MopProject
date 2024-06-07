@@ -6,5 +6,5 @@ data class UserData(
     var characterIndex: Int = 0,
     var projects: List<String> = mutableListOf("")
 ) {
-    constructor() : this("default", 0)
+    constructor() : this("default", 0, projects = mutableListOf(""))
 }
