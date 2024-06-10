@@ -11,7 +11,7 @@ import com.example.cofinder.Screens.RegisterScreen
 import com.example.cofinder.Screens.ScheduleScreen
 import com.example.cofinder.Screens.TeamMainScreen
 
-fun NavGraphBuilder.MainNavGraph(navController: NavHostController){
+fun NavGraphBuilder.MainNavGraph(navController: NavHostController, globalViewModel: GlobalViewModel){
 
     navigation(startDestination = "Home", route = "Main"){
         composable(route=Routes.Login.route){
@@ -31,7 +31,7 @@ fun NavGraphBuilder.MainNavGraph(navController: NavHostController){
         }
 
         composable(route = Routes.Schedule.route){
-            ScheduleScreen(navController = navController)
+            ScheduleScreen(navController = navController, globalViewModel)
         }
 
         composable(route = Routes.Menu.route){
