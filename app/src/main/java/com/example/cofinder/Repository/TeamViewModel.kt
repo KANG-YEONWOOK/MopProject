@@ -47,6 +47,31 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
         }
     }
 
+    fun InsertPost(Team: TeamData) {
+        viewModelScope.launch {
+            repository.InsertTeam(Team)
+        }
+    }
+
+    fun DeletePost(Team: TeamData) {
+        viewModelScope.launch {
+            repository.DeleteTeam(Team)
+        }
+    }
+
+    fun InsertSchedule(Team: TeamData) {
+        viewModelScope.launch {
+            repository.InsertTeam(Team)
+        }
+    }
+
+    fun DeleteSchedule(Team: TeamData) {
+        viewModelScope.launch {
+            repository.DeleteTeam(Team)
+        }
+    }
+
+
 //    fun findTeam(Team: String) {
 //        viewModelScope.launch {
 //            repository.findTeam(Team).collect {

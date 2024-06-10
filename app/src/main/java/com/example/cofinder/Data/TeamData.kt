@@ -1,14 +1,21 @@
 package com.example.cofinder.Data
 
-import com.example.cofinder.Teams.Type
-
 class TeamData(
     var TeamID: Long,
     var name: String,
     var maxNumber: Int,
     var type: Type,
-    var post:  MutableList<PostData> = mutableListOf(),
+    var users: MutableList<UserData> = mutableListOf(),
+    var post: MutableList<PostData> = mutableListOf(),
     var schedule: MutableList<ScheduleData> = mutableListOf(),
 ) {
-    constructor() : this(0, "noninfo", 4, Type.PROJECT)
+    // 기본값을 사용하여 주 생성자를 호출
+    constructor(TeamID: Long, name: String, maxNumber: Int, type: Type) :
+            this(TeamID, name, maxNumber, type, mutableListOf(), mutableListOf(), mutableListOf())
+
+    constructor() :
+            this(TeamID = 0L, name = "", maxNumber = 0, type = Type.PROJECT)
+    fun addUser(user: UserData) {
+        users.add(user)
+    }
 }
