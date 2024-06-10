@@ -1,6 +1,7 @@
 package com.example.cofinder.Screens
 
 import android.icu.text.SimpleDateFormat
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +29,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -65,6 +67,10 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
         ScheduleData(date=1718755200000, hour = 16, min = 12, schedulename="산학협력프로젝트 팀플", type=Type.PROJECT, subject="산학협력프로젝트")
     ) //6월 19일 클릭하면 확인할 수 있음
     var scheduleNow = listOf<ScheduleData>()
+
+    var scheduleName by remember { mutableStateOf("") }
+    var subjectName by remember { mutableStateOf("") }
+    var studyOrProject by remember { mutableStateOf(false) }
 
     val dateFormatter = DatePickerFormatter()
     val datePickerState = rememberDatePickerState()
@@ -169,8 +175,8 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
         }else{
             item{
                 Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
+                    .fillMaxWidth()
+                    .padding(16.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     selectedDate?.let {
@@ -192,16 +198,11 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
                                 style = Typography.bodyLarge,
                                 color = colorResource(id = R.color.darkgreen))
                         }
-                        LaunchedEffect(expanded){
-                            globalViewModel.scheduleName.value = ""
-                            globalViewModel.subjectName.value = ""
-                            globalViewModel.studyOrProject.value = false
-                        }
                         if (expanded) {
                             Column(modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.Top,
                                 horizontalAlignment = Alignment.CenterHorizontally) {
-                                OutlinedTextField(globalViewModel.scheduleName.value, onValueChange = {globalViewModel.scheduleName.value = it},
+                                OutlinedTextField(scheduleName, onValueChange = {scheduleName = it},
                                     modifier = Modifier.padding(12.dp),
                                     placeholder = { Text(text = "일정 제목을 입력하세요",
                                         color= colorResource(id = R.color.greengray),
@@ -209,7 +210,7 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
                                     colors = textFieldColors,
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                OutlinedTextField(globalViewModel.subjectName.value, onValueChange = {globalViewModel.subjectName.value = it},
+                                OutlinedTextField(subjectName, onValueChange = {subjectName = it},
                                     modifier = Modifier.padding(12.dp),
                                     placeholder = { Text(text = "모임 주제를 입력하세요",
                                         color= colorResource(id = R.color.greengray),
@@ -220,6 +221,7 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
                                 TimeInput(state = timePickerState,
                                     modifier = Modifier.padding(8.dp),
                                     colors = timePickerColor)
+                                Log.i("timestate","${timePickerState.hour},${timePickerState.minute}")
                                 Row(modifier = Modifier.fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center) {
@@ -227,15 +229,15 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
                                         style = Typography.bodySmall,
                                         color = colorResource(id = R.color.darkgreen),
                                         modifier = Modifier.padding(4.dp))
-                                    Switch(checked = globalViewModel.studyOrProject.value,
-                                        onCheckedChange = {globalViewModel.studyOrProject.value = !globalViewModel.studyOrProject.value},
+                                    Switch(checked = studyOrProject,
+                                        onCheckedChange = {studyOrProject = !studyOrProject},
                                         colors = switchColor)
                                     Text("프로젝트",
                                         style = Typography.bodySmall,
                                         color = colorResource(id = R.color.darkgreen),
                                         modifier = Modifier.padding(4.dp))
                                 }
-                                ScheduleAddButton()
+                                ScheduleAddButton(globalViewModel, selectedDate, timePickerState, scheduleName, subjectName, studyOrProject)
                             }
                         }
                     }
@@ -252,8 +254,9 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleAddButton() {
+fun ScheduleAddButton(globalViewModel: GlobalViewModel, scheduleNow: Long?, timePickerState: TimePickerState, scheduleName:String, subjectName:String, type: Boolean) {
     val buttonColor = ButtonDefaults.buttonColors(
         containerColor = colorResource(id = R.color.darkgreen),
         contentColor = Color.White,
@@ -265,7 +268,23 @@ fun ScheduleAddButton() {
         .padding(12.dp)
         .width(120.dp),
         colors = buttonColor,
-        onClick = { /*비어있음*/ }) {
+        onClick = {
+            val scheduleType = if(type) Type.STUDY else Type.PROJECT
+            val newSchedule = ScheduleData(
+                date = scheduleNow,
+                hour = timePickerState.hour,
+                min = timePickerState.minute,
+                schedulename = scheduleName,
+                type = scheduleType,
+                subject = subjectName
+            )
+            globalViewModel.userData.schedules?.add(newSchedule)
+            Log.i("userdata","${globalViewModel.userData.schedules}")
+        }) {
         Text("일정 등록", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
     }
+}
+
+fun cleanSchedule(){
+
 }
