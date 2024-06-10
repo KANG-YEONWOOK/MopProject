@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.example.cofinder.Data.UserData
 
 class GlobalViewModel : ViewModel() {
-    var userData = UserData()
     var userID:String? = ""
     var userPasswd:String? = ""
+    var userData = userID?.let { userPasswd?.let { it1 -> UserData(it, it1, true) } }
     var loginStatus = mutableStateOf( false )
 
 }

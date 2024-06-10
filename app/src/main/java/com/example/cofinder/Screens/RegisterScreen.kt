@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -31,20 +32,32 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cofinder.Bars.RegisterTopBar
+import com.example.cofinder.Data.UserData
 import com.example.cofinder.R
+import com.example.cofinder.Repository.UserRepository
+import com.example.cofinder.Repository.UserViewModel
+import com.example.cofinder.Repository.UserViewModelFactory
 import com.example.cofinder.ui.theme.Typography
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 
 @Composable
 fun RegisterScreen(navController: NavController) {
+    val context = LocalContext.current
+    val table = Firebase.database.getReference("")
+    val repository = UserRepository(table)
+    val factory = UserViewModelFactory(repository)
+    val viewModel: UserViewModel = viewModel(factory = factory)
     Scaffold(topBar = { RegisterTopBar(navController = navController)}){
-        RegisterScreenContent(contentPadding = it)
+        RegisterScreenContent(viewModel, contentPadding = it)
     }
 }
 
 @Composable
-fun RegisterScreenContent(contentPadding:PaddingValues) {
+fun RegisterScreenContent(viewModel: UserViewModel, contentPadding:PaddingValues) {
     var userID by remember {
         mutableStateOf("")
     }
@@ -120,9 +133,14 @@ fun RegisterScreenContent(contentPadding:PaddingValues) {
                 keyboardController?.hide()
             })
         )
-        Button(modifier = Modifier.padding(12.dp).width(280.dp),
+        Button(modifier = Modifier
+            .padding(12.dp)
+            .width(280.dp),
             colors = buttonColor1,
-            onClick = { /*비어있음*/ }) {
+            onClick = {
+                val newUser = UserData(studentID = userID, password = userPasswd, loginStatus = true)
+                viewModel.InsertUser(newUser)
+            }) {
             Text("회원가입", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
         }
 

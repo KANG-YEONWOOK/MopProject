@@ -46,4 +46,19 @@ class UserRepository(private val table : DatabaseReference) {
             table.removeEventListener(listener)
         }
     }
+
+    suspend fun getUserInfo(userId: String, password: String): UserData?{
+        return try {
+            val snapshot = table.child(userId).get().await()
+            val user = snapshot.getValue(UserData::class.java)
+            if (user != null && user.password == password) {
+                user
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 }

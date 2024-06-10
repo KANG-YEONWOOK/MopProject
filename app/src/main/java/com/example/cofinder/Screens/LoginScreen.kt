@@ -32,10 +32,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.R
+import com.example.cofinder.Repository.UserRepository
+import com.example.cofinder.Repository.UserViewModel
+import com.example.cofinder.Repository.UserViewModelFactory
 import com.example.cofinder.ui.theme.Typography
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
+import kotlinx.coroutines.flow.observeOn
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -44,6 +51,10 @@ fun LoginScreen(navController: NavHostController) {
 
     val context = LocalContext.current
     val activity = context as Activity
+    val table = Firebase.database.getReference("")
+    val repository = UserRepository(table)
+    val factory = UserViewModelFactory(repository)
+    val viewModel: UserViewModel = viewModel(factory = factory)
 //    val authManager = AuthManager(activity)
 
     var userID by remember {
@@ -132,21 +143,31 @@ fun LoginScreen(navController: NavHostController) {
                     keyboardController?.hide()
                 })
             )
-            Button(modifier = Modifier.padding(12.dp).width(280.dp),
+            Button(modifier = Modifier
+                .padding(12.dp)
+                .width(280.dp),
                 colors = buttonColor1,
                 onClick = {
-                    navController.navigate(Routes.Home.route) {
-                        popUpTo(Routes.Home.route) {
-                            saveState = true
-                            inclusive = false
+                    val nowUser = viewModel.getUserInfo(userID, userPasswd)
+                    if(nowUser != null) {
+                        navController.navigate(Routes.Home.route) {
+                            popUpTo(Routes.Home.route) {
+                                saveState = true
+                                inclusive = false
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    }else{
+                        userID = ""
+                        userPasswd = ""
                     }
                 }) {
                 Text("로그인", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
             }
-            Button(modifier = Modifier.padding(6.dp).width(280.dp),
+            Button(modifier = Modifier
+                .padding(6.dp)
+                .width(280.dp),
                 colors = buttonColor2,
                 onClick = { navController.navigate(Routes.Register.route) }) {
                 Text("회원가입", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))

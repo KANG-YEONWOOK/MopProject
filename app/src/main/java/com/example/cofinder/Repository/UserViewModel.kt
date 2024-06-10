@@ -22,6 +22,9 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
     private var _UserList = MutableStateFlow<List<UserData>>(emptyList())
     val UserList = _UserList.asStateFlow()
 
+    private val _user = MutableStateFlow<UserData?>(null)
+    val user = _user.asStateFlow()
+
     init {
         getAllUsers()
     }
@@ -57,6 +60,13 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
             repository.getAllUsers().collect {
                 _UserList.value = it
             }
+        }
+    }
+
+    fun getUserInfo(userId: String, password: String) {
+        viewModelScope.launch {
+            val userInfo = repository.getUserInfo(userId, password)
+            _user.value = userInfo
         }
     }
 }
