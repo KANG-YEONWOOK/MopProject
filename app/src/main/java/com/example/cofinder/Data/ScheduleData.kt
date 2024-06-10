@@ -1,5 +1,7 @@
 package com.example.cofinder.Data
 
+import com.example.cofinder.Teams.Type
+
 data class ScheduleData(
     var date: Long,
     var hour: Int,
@@ -9,8 +11,4 @@ data class ScheduleData(
     var subject: String
 ) {
     constructor() : this(0, 0,0, "",Type.STUDY,"")
-}
-
-enum class Type {
-    STUDY, PROJECT
 }

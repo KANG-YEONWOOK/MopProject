@@ -44,26 +44,28 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cofinder.Bars.TopBar
 import com.example.cofinder.Data.ScheduleData
-import com.example.cofinder.Data.Type
+import com.example.cofinder.Navigation.GlobalViewModel
 import com.example.cofinder.R
+import com.example.cofinder.Teams.Type
 import com.example.cofinder.ui.theme.Typography
 import java.util.Locale
 
 @Composable
-fun ScheduleScreen(navController: NavController) {
+fun ScheduleScreen(navController: NavController, globalViewModel:GlobalViewModel) {
     Scaffold(topBar = {TopBar(navController = navController)}) {
-        ScheduleScreenContent(navController = navController,contentPadding = it)
+        ScheduleScreenContent(globalViewModel,contentPadding = it)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleScreenContent(navController: NavController, contentPadding: PaddingValues) {
+fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: PaddingValues) {
     val schedules = listOf(
-        ScheduleData(date=1718755200000, hour = 12, min = 8, schedulename="모바일프로그래밍 스터디", type=Type.STUDY, subject="모바일프로그래밍"),
+        ScheduleData(date=1718755200000, hour = 12, min = 8, schedulename="모바일프로그래밍 스터디", type= Type.STUDY, subject="모바일프로그래밍"),
         ScheduleData(date=1718755200000, hour = 16, min = 12, schedulename="산학협력프로젝트 팀플", type=Type.PROJECT, subject="산학협력프로젝트")
     ) //6월 19일 클릭하면 확인할 수 있음
     var scheduleNow = listOf<ScheduleData>()
+
     val dateFormatter = DatePickerFormatter()
     val datePickerState = rememberDatePickerState()
 
@@ -81,9 +83,6 @@ fun ScheduleScreenContent(navController: NavController, contentPadding: PaddingV
     )
 
     val timePickerState = rememberTimePickerState()
-    var scheduleName by remember{ mutableStateOf("") }
-    var subjectName by remember{ mutableStateOf("") }
-    var studyOrProject by remember{ mutableStateOf(false) }
 
     val textFieldColors = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = colorResource(id = R.color.lightgreen),
@@ -122,7 +121,6 @@ fun ScheduleScreenContent(navController: NavController, contentPadding: PaddingV
         uncheckedBorderColor = colorResource(id = R.color.darkgreen),
         uncheckedIconColor = Color.White
     )
-
 
     LaunchedEffect(datePickerState.selectedDateMillis){
         datePickerState.selectedDateMillis?.let{
@@ -194,11 +192,16 @@ fun ScheduleScreenContent(navController: NavController, contentPadding: PaddingV
                                 style = Typography.bodyLarge,
                                 color = colorResource(id = R.color.darkgreen))
                         }
+                        LaunchedEffect(expanded){
+                            globalViewModel.scheduleName.value = ""
+                            globalViewModel.subjectName.value = ""
+                            globalViewModel.studyOrProject.value = false
+                        }
                         if (expanded) {
                             Column(modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.Top,
                                 horizontalAlignment = Alignment.CenterHorizontally) {
-                                OutlinedTextField(scheduleName, onValueChange = {scheduleName = it},
+                                OutlinedTextField(globalViewModel.scheduleName.value, onValueChange = {globalViewModel.scheduleName.value = it},
                                     modifier = Modifier.padding(12.dp),
                                     placeholder = { Text(text = "일정 제목을 입력하세요",
                                         color= colorResource(id = R.color.greengray),
@@ -206,7 +209,7 @@ fun ScheduleScreenContent(navController: NavController, contentPadding: PaddingV
                                     colors = textFieldColors,
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                OutlinedTextField(subjectName, onValueChange = {subjectName = it},
+                                OutlinedTextField(globalViewModel.subjectName.value, onValueChange = {globalViewModel.subjectName.value = it},
                                     modifier = Modifier.padding(12.dp),
                                     placeholder = { Text(text = "모임 주제를 입력하세요",
                                         color= colorResource(id = R.color.greengray),
@@ -224,8 +227,8 @@ fun ScheduleScreenContent(navController: NavController, contentPadding: PaddingV
                                         style = Typography.bodySmall,
                                         color = colorResource(id = R.color.darkgreen),
                                         modifier = Modifier.padding(4.dp))
-                                    Switch(checked = studyOrProject,
-                                        onCheckedChange = {studyOrProject = !studyOrProject},
+                                    Switch(checked = globalViewModel.studyOrProject.value,
+                                        onCheckedChange = {globalViewModel.studyOrProject.value = !globalViewModel.studyOrProject.value},
                                         colors = switchColor)
                                     Text("프로젝트",
                                         style = Typography.bodySmall,

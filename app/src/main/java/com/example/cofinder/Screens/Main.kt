@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cofinder.Bars.BottomBar
+import com.example.cofinder.Navigation.GlobalViewModel
 import com.example.cofinder.Navigation.MainNavGraph
 import com.example.cofinder.Navigation.Routes
 
@@ -17,7 +17,7 @@ import com.example.cofinder.Navigation.Routes
 @Composable
 fun Main(navController: NavHostController) {
 
-    val context = LocalContext.current
+    val globalViewModel = GlobalViewModel()
 
     Scaffold(bottomBar = {
         if(true) //로그인 상태에만 BottomBar렌더링
@@ -31,7 +31,7 @@ fun Main(navController: NavHostController) {
                     LoginScreen(navController = navController)
                 }
 
-                MainNavGraph(navController)
+                MainNavGraph(navController, globalViewModel)
             }
         }
     }
