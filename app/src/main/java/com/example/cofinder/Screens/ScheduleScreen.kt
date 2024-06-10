@@ -29,7 +29,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -128,6 +127,13 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
         uncheckedIconColor = Color.White
     )
 
+    val buttonColor = ButtonDefaults.buttonColors(
+        containerColor = colorResource(id = R.color.darkgreen),
+        contentColor = Color.White,
+        disabledContainerColor = colorResource(id = R.color.middlegreen),
+        disabledContentColor = Color.White
+    )
+
     LaunchedEffect(datePickerState.selectedDateMillis){
         datePickerState.selectedDateMillis?.let{
             selectedDate = it
@@ -144,7 +150,11 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
         todayDateBorderColor = colorResource(id = R.color.greengray),
         todayContentColor = colorResource(id = R.color.middlegreen)
     )
-
+    LaunchedEffect(expanded) {
+        scheduleName = ""
+        subjectName = ""
+        studyOrProject = false
+    }
     LazyColumn(modifier = Modifier
         .padding(contentPadding)
         .fillMaxSize(),
@@ -237,7 +247,26 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
                                         color = colorResource(id = R.color.darkgreen),
                                         modifier = Modifier.padding(4.dp))
                                 }
-                                ScheduleAddButton(globalViewModel, selectedDate, timePickerState, scheduleName, subjectName, studyOrProject)
+                                Button(modifier = Modifier
+                                    .padding(12.dp)
+                                    .width(120.dp),
+                                    colors = buttonColor,
+                                    onClick = {
+                                        val scheduleType = if(studyOrProject) Type.PROJECT else Type.STUDY
+                                        val newSchedule = ScheduleData(
+                                            date = selectedDate,
+                                            hour = timePickerState.hour,
+                                            min = timePickerState.minute,
+                                            schedulename = scheduleName,
+                                            type = scheduleType,
+                                            subject = subjectName
+                                        )
+                                        globalViewModel.userData.schedules?.add(newSchedule)
+                                        Log.i("userdata","${globalViewModel.userData.schedules}")
+                                        expanded = !expanded
+                                    }) {
+                                    Text("일정 등록", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
+                                }
                             }
                         }
                     }
@@ -251,40 +280,5 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
             ScheduleCard(it)
         }
     }
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ScheduleAddButton(globalViewModel: GlobalViewModel, scheduleNow: Long?, timePickerState: TimePickerState, scheduleName:String, subjectName:String, type: Boolean) {
-    val buttonColor = ButtonDefaults.buttonColors(
-        containerColor = colorResource(id = R.color.darkgreen),
-        contentColor = Color.White,
-        disabledContainerColor = colorResource(id = R.color.middlegreen),
-        disabledContentColor = Color.White
-    )
-
-    Button(modifier = Modifier
-        .padding(12.dp)
-        .width(120.dp),
-        colors = buttonColor,
-        onClick = {
-            val scheduleType = if(type) Type.STUDY else Type.PROJECT
-            val newSchedule = ScheduleData(
-                date = scheduleNow,
-                hour = timePickerState.hour,
-                min = timePickerState.minute,
-                schedulename = scheduleName,
-                type = scheduleType,
-                subject = subjectName
-            )
-            globalViewModel.userData.schedules?.add(newSchedule)
-            Log.i("userdata","${globalViewModel.userData.schedules}")
-        }) {
-        Text("일정 등록", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
-    }
-}
-
-fun cleanSchedule(){
 
 }
