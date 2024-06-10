@@ -24,6 +24,23 @@ class TeamRepository(private val table :DatabaseReference) {
         table.child(teamData.TeamID.toString()).removeValue()
     }
 
+    suspend fun InsertPost(teamData: TeamData) {
+
+    }
+
+    suspend fun InsertSchedule(teamData: TeamData) {
+
+    }
+
+    fun DeletePost(teamData: TeamData) {
+
+    }
+
+    fun DeleteSchedule(teamData: TeamData) {
+
+    }
+
+
     suspend fun getAllTeams(): Flow<List<TeamData>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
