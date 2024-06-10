@@ -1,6 +1,7 @@
 package com.example.cofinder.Teams
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.cofinder.R
+import java.io.Console
 
 
 @Composable
@@ -62,7 +64,8 @@ fun TeamCard(team: Team) {
             if (expanded) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { /* 여기서 팀 참가 로직 처리 */ },
+                    onClick = { /* 여기서 팀 참가 로직 처리 */
+                        Log.d("DB", "팀 참가")},
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.darkgreen)
