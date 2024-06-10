@@ -170,13 +170,72 @@ fun ScheduleScreenContent(navController: NavController, contentPadding: PaddingV
             }
         }else{
             item{
-                selectedDate?.let {
-                    formattedDate = dateFormat.format(it)
-                    Text("${formattedDate}의 일정",
-                        color = colorResource(id = R.color.darkgreen),
-                        style = Typography.bodyLarge,
-                        modifier = Modifier.padding(16.dp)
-                    )
+                Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    selectedDate?.let {
+                        formattedDate = dateFormat.format(it)
+                        Text("${formattedDate}의 일정",
+                            color = colorResource(id = R.color.darkgreen),
+                            style = Typography.bodyLarge,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                    ElevatedCard(onClick = { expanded = !expanded },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = evCardColors,
+                        elevation = evCardElevation) {
+                        Row(verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()) {
+                            Text("일정 추가",modifier=Modifier.padding(8.dp),
+                                style = Typography.bodyLarge,
+                                color = colorResource(id = R.color.darkgreen))
+                        }
+                        if (expanded) {
+                            Column(modifier = Modifier.fillMaxWidth(),
+                                verticalArrangement = Arrangement.Top,
+                                horizontalAlignment = Alignment.CenterHorizontally) {
+                                OutlinedTextField(scheduleName, onValueChange = {scheduleName = it},
+                                    modifier = Modifier.padding(12.dp),
+                                    placeholder = { Text(text = "일정 제목을 입력하세요",
+                                        color= colorResource(id = R.color.greengray),
+                                        style = Typography.bodyMedium)},
+                                    colors = textFieldColors,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                OutlinedTextField(subjectName, onValueChange = {subjectName = it},
+                                    modifier = Modifier.padding(12.dp),
+                                    placeholder = { Text(text = "모임 주제를 입력하세요",
+                                        color= colorResource(id = R.color.greengray),
+                                        style = Typography.bodyMedium) },
+                                    colors = textFieldColors,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                TimeInput(state = timePickerState,
+                                    modifier = Modifier.padding(8.dp),
+                                    colors = timePickerColor)
+                                Row(modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center) {
+                                    Text("스터디",
+                                        style = Typography.bodySmall,
+                                        color = colorResource(id = R.color.darkgreen),
+                                        modifier = Modifier.padding(4.dp))
+                                    Switch(checked = studyOrProject,
+                                        onCheckedChange = {studyOrProject = !studyOrProject},
+                                        colors = switchColor)
+                                    Text("프로젝트",
+                                        style = Typography.bodySmall,
+                                        color = colorResource(id = R.color.darkgreen),
+                                        modifier = Modifier.padding(4.dp))
+                                }
+                                ScheduleAddButton()
+                            }
+                        }
+                    }
                 }
             }
             //selectedDate에 저장되어있는 일정 중
@@ -185,67 +244,6 @@ fun ScheduleScreenContent(navController: NavController, contentPadding: PaddingV
         scheduleNow = schedules.filter { it-> it.date == selectedDate }
         items(scheduleNow) {
             ScheduleCard(it)
-        }
-        item{
-            Row(verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)) {
-                ElevatedCard(onClick = { expanded = !expanded },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = evCardColors,
-                    elevation = evCardElevation) {
-                    Row(verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth()) {
-                        Text("일정 추가",modifier=Modifier.padding(8.dp),
-                            style = Typography.bodyLarge,
-                            color = colorResource(id = R.color.darkgreen))
-                    }
-                    if (expanded) {
-                        Column(modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally) {
-                            OutlinedTextField(scheduleName, onValueChange = {scheduleName = it},
-                                modifier = Modifier.padding(12.dp),
-                                placeholder = { Text(text = "일정 제목을 입력하세요",
-                                    color= colorResource(id = R.color.greengray),
-                                    style = Typography.bodyMedium)},
-                                colors = textFieldColors,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            OutlinedTextField(subjectName, onValueChange = {subjectName = it},
-                                modifier = Modifier.padding(12.dp),
-                                placeholder = { Text(text = "모임 주제를 입력하세요",
-                                    color= colorResource(id = R.color.greengray),
-                                    style = Typography.bodyMedium) },
-                                colors = textFieldColors,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            TimeInput(state = timePickerState,
-                                modifier = Modifier.padding(8.dp),
-                                colors = timePickerColor)
-                            Row(modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center) {
-                                Text("스터디",
-                                    style = Typography.bodySmall,
-                                    color = colorResource(id = R.color.darkgreen),
-                                    modifier = Modifier.padding(4.dp))
-                                Switch(checked = studyOrProject,
-                                    onCheckedChange = {studyOrProject = !studyOrProject},
-                                    colors = switchColor)
-                                Text("프로젝트",
-                                    style = Typography.bodySmall,
-                                    color = colorResource(id = R.color.darkgreen),
-                                    modifier = Modifier.padding(4.dp))
-                            }
-                            ScheduleAddButton()
-                        }
-                    }
-                }
-            }
         }
     }
 
