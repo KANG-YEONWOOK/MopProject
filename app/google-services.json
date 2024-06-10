@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "731038161955",
+    "project_id": "cofnider",
+    "storage_bucket": "cofnider.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731038161955:android:17f1c414d337ba52dc2596",
+        "android_client_info": {
+          "package_name": "com.example.cofinder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ7II55fgAuxvOQJ4dBrj1gVVR6Zvk-9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
