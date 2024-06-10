@@ -37,22 +37,27 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.cofinder.Data.TeamData
+import com.example.cofinder.Data.Type
+import com.example.cofinder.Data.UserData
 import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.R
-import com.example.cofinder.Teams.Team
+import com.example.cofinder.Repository.TeamViewModel
 import com.example.cofinder.Teams.TeamList
-import com.example.cofinder.Teams.Type
-import com.example.cofinder.Teams.User
 import com.example.cofinder.ui.theme.Typography
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen() {
-    var teams by remember { mutableStateOf(
-        listOf(
-            Team(1, "모프 완전정복", Type.STUDY, "모바일 프로그래밍", 5, User(1, "앨리스")),
-            Team(2, "기말 프로젝트", Type.PROJECT, "모바일 프로그래밍", 10, User(2, "밥"))
-        )) }
+fun HomeScreen(teamViewModel: TeamViewModel, user: UserData) {
+//    var teams by remember { mutableStateOf(
+//        listOf(
+//            Team(1, "모프 완전정복", Type.STUDY, "모바일 프로그래밍", 5, User(1, "앨리스")),
+//            Team(2, "기말 프로젝트", Type.PROJECT, "모바일 프로그래밍", 10, User(2, "밥"))
+//        )) }
+    // TeamList를 불러와서 보여줘야 함
+
+    var teams = user.projects
+
     var query by remember{ mutableStateOf("")}
     var showDialog by remember {
         mutableStateOf(false)
@@ -99,7 +104,7 @@ fun HomeScreen() {
                     Text("검색")
                 }
             }
-            TeamList(teams = teams)
+            TeamList(teams = user.projects, user)
         }
 
     }
@@ -107,16 +112,14 @@ fun HomeScreen() {
     if(showDialog){
         NewTeamDialog(
             onDismiss = { showDialog = false },
-            onCreate = { team ->
-                teams = teams + team
-                showDialog = false
-            }
+            teamViewModel,
+            user
         )
     }
 }
 
 @Composable
-fun NewTeamDialog(onDismiss: () -> Unit, onCreate: (Team) -> Unit) {
+fun NewTeamDialog(onDismiss: () -> Unit, teamViewModel: TeamViewModel, user: UserData) {
     var name by remember { mutableStateOf("") }
     var type by remember { mutableStateOf(Type.STUDY) }
     var subject by remember { mutableStateOf("") }
@@ -169,15 +172,14 @@ fun NewTeamDialog(onDismiss: () -> Unit, onCreate: (Team) -> Unit) {
         confirmButton = {
             Button(
                 onClick = {
-                    val newTeam = Team(
-                        id = (0..Long.MAX_VALUE).random(),
-                        name = name,
-                        type = type,
-                        subject = subject,
-                        maxMembers = maxMembers.toIntOrNull() ?: 0,
-                        leader = User(id = 0, name = "User") // 리더 정보는 실제 사용자의 정보로 설정
+                    val newTeam = TeamData(
+                        (0..Long.MAX_VALUE).random(), // Random ID for the team
+                        name = "TeamName", // Example name, replace with actual data
+                        maxNumber = 4,
+                        type = Type.PROJECT
                     )
-                    onCreate(newTeam)
+                    newTeam.addUser(user)
+                    teamViewModel.InsertTeam(newTeam)
                     Log.d("DB", "팀 생성")
                     //유저의 프로젝트 목록에 해당 팀의 id를 넣어야함!!
                 },colors = ButtonDefaults.buttonColors(
