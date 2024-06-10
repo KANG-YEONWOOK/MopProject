@@ -1,5 +1,6 @@
 package com.example.cofinder.Repository
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,8 @@ class TeamViewModelFactory(private val repository: TeamRepository): ViewModelPro
 }
 
 class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
+
+    var selectedTeam = mutableStateOf(TeamData())
 
     private var _TeamList = MutableStateFlow<List<TeamData>>(emptyList())
     val TeamList = _TeamList.asStateFlow()

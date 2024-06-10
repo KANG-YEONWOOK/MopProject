@@ -273,7 +273,7 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
                 }
             }
             //selectedDate에 저장되어있는 일정 중
-            //날짜에 맞는거 불러와서 렌더링하는거 추가해야함
+            //날짜에 맞는거 불러와서 걔들만 렌더링
         }
         scheduleNow = schedules.filter { it-> it.date == selectedDate }
         items(scheduleNow) {

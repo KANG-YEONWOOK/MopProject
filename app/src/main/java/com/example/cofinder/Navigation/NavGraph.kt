@@ -9,6 +9,7 @@ import com.example.cofinder.Screens.LoginScreen
 import com.example.cofinder.Screens.MenuScreen
 import com.example.cofinder.Screens.RegisterScreen
 import com.example.cofinder.Screens.ScheduleScreen
+import com.example.cofinder.Screens.TeamInfoScreen
 import com.example.cofinder.Screens.TeamMainScreen
 
 fun NavGraphBuilder.MainNavGraph(navController: NavHostController, globalViewModel: GlobalViewModel){
@@ -36,6 +37,10 @@ fun NavGraphBuilder.MainNavGraph(navController: NavHostController, globalViewMod
 
         composable(route = Routes.Menu.route){
             MenuScreen(navController = navController)
+        }
+
+        composable(route = Routes.TeamInfo.route){
+            TeamInfoScreen(navController)
         }
     }
 
