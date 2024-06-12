@@ -31,10 +31,9 @@ import androidx.compose.ui.unit.dp
 import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.Type
 import com.example.cofinder.Data.UserData
-import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.R
 import com.example.cofinder.Repository.TeamViewModel
-import com.example.cofinder.Teams.TeamList
+import com.example.cofinder.Screens.team.TeamList
 import com.example.cofinder.ui.theme.Typography
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

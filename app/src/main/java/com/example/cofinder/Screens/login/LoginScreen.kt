@@ -1,4 +1,4 @@
-package com.example.cofinder.Screens
+package com.example.cofinder.Screens.login
 
 import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
