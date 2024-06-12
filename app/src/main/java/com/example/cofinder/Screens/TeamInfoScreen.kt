@@ -28,7 +28,7 @@ import androidx.navigation.NavController
 import com.example.cofinder.Bars.TopBar
 import com.example.cofinder.Data.ScheduleData
 import com.example.cofinder.R
-import com.example.cofinder.Teams.Type
+import com.example.cofinder.Data.Type
 import com.example.cofinder.ui.theme.Typography
 
 
