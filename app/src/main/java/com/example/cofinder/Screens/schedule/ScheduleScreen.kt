@@ -1,4 +1,4 @@
-package com.example.cofinder.Screens
+package com.example.cofinder.Screens.schedule
 
 import android.icu.text.SimpleDateFormat
 import android.util.Log
@@ -45,22 +45,22 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cofinder.Bars.TopBar
 import com.example.cofinder.Data.ScheduleData
-import com.example.cofinder.Navigation.GlobalViewModel
 import com.example.cofinder.R
-import com.example.cofinder.Teams.Type
+import com.example.cofinder.Data.Type
+import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.ui.theme.Typography
 import java.util.Locale
 
 @Composable
-fun ScheduleScreen(navController: NavController, globalViewModel:GlobalViewModel) {
+fun ScheduleScreen(navController: NavController, userViewModel: UserViewModel) {
     Scaffold(topBar = {TopBar(navController = navController)}) {
-        ScheduleScreenContent(globalViewModel,contentPadding = it)
+        ScheduleScreenContent(userViewModel, contentPadding = it)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: PaddingValues) {
+fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingValues) {
     val schedules = listOf(
         ScheduleData(date=1718755200000, hour = 12, min = 8, schedulename="모바일프로그래밍 스터디", type= Type.STUDY, subject="모바일프로그래밍"),
         ScheduleData(date=1718755200000, hour = 16, min = 12, schedulename="산학협력프로젝트 팀플", type=Type.PROJECT, subject="산학협력프로젝트")
@@ -261,8 +261,8 @@ fun ScheduleScreenContent(globalViewModel: GlobalViewModel, contentPadding: Padd
                                             type = scheduleType,
                                             subject = subjectName
                                         )
-                                        globalViewModel.userData.schedules?.add(newSchedule)
-                                        Log.i("userdata","${globalViewModel.userData.schedules}")
+                                        userViewModel.userData.schedules?.add(newSchedule)
+                                        Log.i("userdata","${userViewModel.userData.schedules}")
                                         expanded = !expanded
                                     }) {
                                     Text("일정 등록", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))

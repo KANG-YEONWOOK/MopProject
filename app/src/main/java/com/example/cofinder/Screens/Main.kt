@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,6 +17,7 @@ import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.Repository.UserRepository
 import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.Repository.UserViewModelFactory
+import com.example.cofinder.Screens.login.LoginScreen
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 

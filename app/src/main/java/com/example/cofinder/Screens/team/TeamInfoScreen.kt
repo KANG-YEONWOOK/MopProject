@@ -1,4 +1,4 @@
-package com.example.cofinder.Screens
+package com.example.cofinder.Screens.team
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +29,7 @@ import com.example.cofinder.Bars.TopBar
 import com.example.cofinder.Data.ScheduleData
 import com.example.cofinder.R
 import com.example.cofinder.Data.Type
+import com.example.cofinder.Screens.schedule.ScheduleCancelButton
 import com.example.cofinder.ui.theme.Typography
 
 

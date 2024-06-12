@@ -4,15 +4,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.cofinder.Repository.TeamViewModel
+import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.Screens.HomeScreen
-import com.example.cofinder.Screens.LoginScreen
-import com.example.cofinder.Screens.MenuScreen
-import com.example.cofinder.Screens.RegisterScreen
-import com.example.cofinder.Screens.ScheduleScreen
-import com.example.cofinder.Screens.TeamInfoScreen
-import com.example.cofinder.Screens.TeamMainScreen
+import com.example.cofinder.Screens.login.LoginScreen
+import com.example.cofinder.Screens.login.RegisterScreen
+import com.example.cofinder.Screens.schedule.ScheduleScreen
+import com.example.cofinder.Screens.team.TeamInfoScreen
+import com.example.cofinder.Screens.team.TeamMainScreen
 
-fun NavGraphBuilder.MainNavGraph(navController: NavHostController, globalViewModel: GlobalViewModel){
+fun NavGraphBuilder.MainNavGraph(navController: NavHostController, userViewModel: UserViewModel, teamViewModel: TeamViewModel){
 
     navigation(startDestination = "Home", route = "Main"){
         composable(route=Routes.Login.route){
@@ -24,7 +25,7 @@ fun NavGraphBuilder.MainNavGraph(navController: NavHostController, globalViewMod
         }
 
         composable(route = Routes.Home.route){
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
 
         composable(route = Routes.MyTeam.route){
@@ -33,10 +34,6 @@ fun NavGraphBuilder.MainNavGraph(navController: NavHostController, globalViewMod
 
         composable(route = Routes.Schedule.route){
             ScheduleScreen(navController = navController, globalViewModel)
-        }
-
-        composable(route = Routes.Menu.route){
-            MenuScreen(navController = navController)
         }
 
         composable(route = Routes.TeamInfo.route){
