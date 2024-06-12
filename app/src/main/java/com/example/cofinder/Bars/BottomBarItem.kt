@@ -27,11 +27,6 @@ object BottomBarItems{
             name="Schedule",
             icon= Icons.Default.CalendarMonth,
             route = "Schedule"
-        ),
-        BarItem(
-            name="Menu",
-            icon= Icons.Default.Menu,
-            route = "Menu"
         )
     )
 }

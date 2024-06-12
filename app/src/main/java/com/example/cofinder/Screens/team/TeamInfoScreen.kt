@@ -36,20 +36,16 @@ import com.example.cofinder.ui.theme.Typography
 
 
 @Composable
-fun TeamInfoScreen(navController: NavController, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
+fun TeamInfoScreen(navController: NavController, teamViewModel: TeamViewModel) {
     Scaffold(
         topBar = { TopBar(navController) }
     ) {
-        TeamInfoScreenContent(navController, contentPadding = it)
+        TeamInfoScreenContent(contentPadding = it, teamViewModel)
     }
 }
 
 @Composable
-fun TeamInfoScreenContent(navController: NavController, contentPadding:PaddingValues) {
-    val schedules = listOf(
-        ScheduleData(date=1718755200000, hour = 12, min = 8, schedulename="모바일프로그래밍 스터디", type= Type.STUDY, subject="모바일프로그래밍"),
-        ScheduleData(date=1718755200000, hour = 16, min = 12, schedulename="산학협력프로젝트 팀플", type=Type.PROJECT, subject="산학협력프로젝트")
-    )
+fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewModel) {
 
     LazyColumn(
         contentPadding = contentPadding,
@@ -57,11 +53,11 @@ fun TeamInfoScreenContent(navController: NavController, contentPadding:PaddingVa
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item{
-            //Text("팀이름 여기 들어가야 됨")
+            Text("${teamViewModel.selectedTeam.value}", style = Typography.titleMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
         }
-        items(schedules) { schedule ->
-            TeamScheduleCard(schedule)
-        }
+//        items() { schedule ->
+//            TeamScheduleCard(schedule)
+//        }
     }
 }
 

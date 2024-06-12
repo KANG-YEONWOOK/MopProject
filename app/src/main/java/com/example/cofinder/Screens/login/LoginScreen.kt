@@ -49,12 +49,12 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
 //    val navViewModel: NavViewModel =
 //        viewModel(viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 
-    val context = LocalContext.current
-    val activity = context as Activity
-    val table = Firebase.database.getReference("")
-    val repository = UserRepository(table)
-    val factory = UserViewModelFactory(repository)
-    val viewModel: UserViewModel = viewModel(factory = factory)
+//    val context = LocalContext.current
+//    val activity = context as Activity
+//    val table = Firebase.database.getReference("")
+//    val repository = UserRepository(table)
+////    val factory = UserViewModelFactory(repository)
+//    val viewModel: UserViewModel = viewModel(factory = factory)
 //    val authManager = AuthManager(activity)
 
     var userID by remember {
@@ -148,7 +148,7 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
                 .width(280.dp),
                 colors = buttonColor1,
                 onClick = {
-                    val nowUser = viewModel.getUserInfo(userID, userPasswd)
+                    val nowUser = userViewModel.getUserInfo(userID, userPasswd)
                     if(nowUser != null) {
                         navController.navigate(Routes.Home.route) {
                             popUpTo(Routes.Home.route) {

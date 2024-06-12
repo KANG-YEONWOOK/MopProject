@@ -41,5 +41,4 @@ fun NavGraphBuilder.MainNavGraph(navController: NavHostController, userViewModel
         }
     }
 
-
 }

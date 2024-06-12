@@ -44,7 +44,7 @@ fun Main(navController: NavHostController) {
                 startDestination = Routes.Login.route
             ){
                 composable(Routes.Login.route){
-                    LoginScreen(navController = navController)
+                    LoginScreen(navController = navController, userviewModel)
                 }
 
                 MainNavGraph(navController, userviewModel, teamviewModel)

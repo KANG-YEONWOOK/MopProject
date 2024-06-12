@@ -15,6 +15,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -35,21 +37,17 @@ fun TeamMainScreen(navController: NavController, userViewModel: UserViewModel, t
     Scaffold(
         topBar = { TopBar(navController) }
     ) {
-        TeamMainScreenContent(navController, contentPadding = it, teamViewModel)
+        TeamMainScreenContent(navController, contentPadding = it, userViewModel, teamViewModel)
     }
 }
 
 @Composable
-fun TeamMainScreenContent(navController: NavController, contentPadding: PaddingValues, teamViewModel: TeamViewModel) {
-//    val post = PostData(1L,"","")
-//    val teams = listOf(
-//        TeamData(1, "모프 완전정복", 4, Type.PROJECT, listOf(post) , User(1, "앨리스")),
-//        TeamData(2, "기말 프로젝트", 6, Type.PROJECT, "", User(2, "밥"))
-//    )
+fun TeamMainScreenContent(navController: NavController, contentPadding: PaddingValues, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
+    val userdatas by userViewModel.user.collectAsState()
     Column(modifier = androidx.compose.ui.Modifier.padding(contentPadding),
         verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "나의 팀", style = Typography.titleMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
-//        TeamList2(teams = teamViewModel.TeamList.value, navController, teamViewModel)
+        TeamList2(teams = userdatas!!.projects, navController = navController, teamViewModel = teamViewModel)
     }
 }
 
