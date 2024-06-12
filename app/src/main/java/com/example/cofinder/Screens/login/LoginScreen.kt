@@ -1,6 +1,7 @@
 package com.example.cofinder.Screens.login
 
 import android.app.Activity
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -144,6 +145,8 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
                 .width(280.dp),
                 colors = buttonColor1,
                 onClick = {
+                    Log.w("Login1","${userViewModel.getAllUsers()}")
+                    Log.w("Login2","${userViewModel.UserList}")
 //                    val nowUser = userViewModel.getUserInfo(userID, userPasswd)
 //                    if(nowUser != null) {
 //                        navController.navigate(Routes.Home.route) {

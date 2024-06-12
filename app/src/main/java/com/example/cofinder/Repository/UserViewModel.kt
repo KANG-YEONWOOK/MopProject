@@ -1,5 +1,6 @@
 package com.example.cofinder.Repository
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,8 @@ class UserViewModelFactory(private val repository: UserRepository): ViewModelPro
 }
 
 class UserViewModel (private val repository: UserRepository) : ViewModel(){
+
+    var logIn = mutableStateOf(false)
 
     private var _UserList = MutableStateFlow<List<UserData>>(emptyList())
     val UserList = _UserList.asStateFlow()

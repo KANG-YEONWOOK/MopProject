@@ -57,16 +57,10 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 }
 
 @Composable
-fun RegisterScreenContent(navController: NavController, userviewModel: UserViewModel, contentPadding:PaddingValues) {
+fun RegisterScreenContent(navController: NavController, userViewModel: UserViewModel, contentPadding: PaddingValues) {
     val coroutineScope = rememberCoroutineScope()
-    var userID by remember {
-        mutableStateOf("")
-    }
-
-    var userPasswd by remember {
-        mutableStateOf("")
-    }
-
+    var userID by remember { mutableStateOf("") }
+    var userPasswd by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -87,26 +81,27 @@ fun RegisterScreenContent(navController: NavController, userviewModel: UserViewM
         unfocusedTextColor = colorResource(id = R.color.darkgreen)
     )
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(contentPadding),
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("회원가입", style = Typography.titleLarge ,modifier = Modifier.padding(8.dp),
-            color = colorResource(id = R.color.darkgreen))
-        Text("가입하실 아이디와 비밀번호를 입력해주세요!", style = Typography.bodySmall,
-            modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 12.dp), color = colorResource(id = R.color.lightgreen))
+        Text("회원가입", style = Typography.titleLarge, modifier = Modifier.padding(8.dp), color = colorResource(id = R.color.darkgreen))
+        Text("가입하실 아이디와 비밀번호를 입력해주세요!", style = Typography.bodySmall, modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 12.dp), color = colorResource(id = R.color.lightgreen))
         OutlinedTextField(
             value = userID,
-            onValueChange = {userID = it},
+            onValueChange = { userID = it },
             modifier = Modifier.padding(bottom = 12.dp),
             colors = textFieldColors,
             shape = RoundedCornerShape(20.dp),
             label = {
-                Text(text = "아이디를 입력해주세요.",
+                Text(
+                    text = "아이디를 입력해주세요.",
                     color = colorResource(id = R.color.darkgreen),
-                    style = Typography.bodyMedium)
+                    style = Typography.bodyMedium
+                )
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = {
@@ -134,27 +129,28 @@ fun RegisterScreenContent(navController: NavController, userviewModel: UserViewM
                 keyboardController?.hide()
             })
         )
-        Button(modifier = Modifier
-            .padding(12.dp)
-            .width(280.dp),
+        Button(
+            modifier = Modifier
+                .padding(12.dp)
+                .width(280.dp),
             colors = buttonColor1,
             onClick = {
                 coroutineScope.launch {
-                val newUser = UserData(studentID = userID, password = userPasswd, loginStatus = true)
-                Log.d("studentid", userID)
-                Log.d("passwd", userPasswd)
-                userviewModel.InsertUser(newUser)
-                navController.navigate(Routes.Login.route) {
-                    popUpTo(Routes.Login.route) {
-                        saveState = true
-                        inclusive = false
+                    val newUser = UserData(studentID = userID, password = userPasswd, loginStatus = true)
+                    Log.d("studentid", userID)
+                    Log.d("passwd", userPasswd)
+                    userViewModel.InsertUser(newUser)
+                    navController.navigate(Routes.Login.route) {
+                        popUpTo(Routes.Login.route) {
+                            saveState = true
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                        restoreState = true
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
-            }}) {
+            }) {
             Text("회원가입", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
         }
-
     }
 }

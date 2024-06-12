@@ -28,15 +28,14 @@ import com.google.firebase.database.database
 @Composable
 fun Main(navController: NavHostController) {
 
-    val context = LocalContext.current
-    val usertable = Firebase.database.getReference("cofnider/user")
-    val userviewModel: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository(usertable)))
+    val userTable = Firebase.database.getReference("cofnider/user")
+    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository(userTable)))
 
-    val teamtable = Firebase.database.getReference("cofnider/team")
-    val teamviewModel: TeamViewModel = viewModel(factory = TeamViewModelFactory(TeamRepository(teamtable)))
+    val teamTable = Firebase.database.getReference("cofnider/team")
+    val teamViewModel: TeamViewModel = viewModel(factory = TeamViewModelFactory(TeamRepository(teamTable)))
 
     Scaffold(bottomBar = {
-        if(true) //로그인 상태에만 BottomBar렌더링
+        if(userViewModel.logIn.value) //로그인 상태에만 BottomBar렌더링
             BottomBar(navController = navController)}){
         Column(modifier = Modifier.padding(it)) {
             NavHost(
@@ -44,10 +43,10 @@ fun Main(navController: NavHostController) {
                 startDestination = Routes.Login.route
             ){
                 composable(Routes.Login.route){
-                    LoginScreen(navController = navController, userviewModel)
+                    LoginScreen(navController = navController, userViewModel)
                 }
 
-                MainNavGraph(navController, userviewModel, teamviewModel)
+                MainNavGraph(navController, userViewModel, teamViewModel)
             }
         }
     }
