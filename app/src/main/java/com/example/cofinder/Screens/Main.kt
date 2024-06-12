@@ -14,6 +14,9 @@ import com.example.cofinder.Bars.BottomBar
 import com.example.cofinder.Navigation.GlobalViewModel
 import com.example.cofinder.Navigation.MainNavGraph
 import com.example.cofinder.Navigation.Routes
+import com.example.cofinder.Repository.TeamRepository
+import com.example.cofinder.Repository.TeamViewModel
+import com.example.cofinder.Repository.TeamViewModelFactory
 import com.example.cofinder.Repository.UserRepository
 import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.Repository.UserViewModelFactory
@@ -30,9 +33,7 @@ fun Main(navController: NavHostController) {
     val userviewModel: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository(usertable)))
 
     val teamtable = Firebase.database.getReference("cofnider/team")
-    val teamviewModel: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository(teamtable)))
-
-    val globalViewModel = GlobalViewModel()
+    val teamviewModel: TeamViewModel = viewModel(factory = TeamViewModelFactory(TeamRepository(teamtable)))
 
     Scaffold(bottomBar = {
         if(true) //로그인 상태에만 BottomBar렌더링
@@ -46,7 +47,7 @@ fun Main(navController: NavHostController) {
                     LoginScreen(navController = navController)
                 }
 
-                MainNavGraph(navController, globalViewModel)
+                MainNavGraph(navController, userviewModel, teamviewModel)
             }
         }
     }

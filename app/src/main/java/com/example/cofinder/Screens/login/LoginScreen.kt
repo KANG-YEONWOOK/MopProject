@@ -45,7 +45,7 @@ import com.google.firebase.database.database
 import kotlinx.coroutines.flow.observeOn
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) {
 //    val navViewModel: NavViewModel =
 //        viewModel(viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
 

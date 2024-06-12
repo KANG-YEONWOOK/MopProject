@@ -261,8 +261,8 @@ fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingV
                                             type = scheduleType,
                                             subject = subjectName
                                         )
-                                        userViewModel.userData.schedules?.add(newSchedule)
-                                        Log.i("userdata","${userViewModel.userData.schedules}")
+//                                        userViewModel.userData.schedules?.add(newSchedule)
+//                                        Log.i("userdata","${userViewModel.userData.schedules}")
                                         expanded = !expanded
                                     }) {
                                     Text("일정 등록", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))

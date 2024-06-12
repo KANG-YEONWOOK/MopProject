@@ -27,10 +27,11 @@ import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.R
 import com.example.cofinder.Repository.TeamViewModel
+import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.ui.theme.Typography
 
 @Composable
-fun TeamMainScreen(navController: NavController, teamViewModel: TeamViewModel) {
+fun TeamMainScreen(navController: NavController, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
     Scaffold(
         topBar = { TopBar(navController) }
     ) {

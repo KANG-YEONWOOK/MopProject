@@ -17,27 +17,27 @@ fun NavGraphBuilder.MainNavGraph(navController: NavHostController, userViewModel
 
     navigation(startDestination = "Home", route = "Main"){
         composable(route=Routes.Login.route){
-            LoginScreen(navController = navController)
+            LoginScreen(navController = navController, userViewModel)
         }
 
         composable(route=Routes.Register.route){
-            RegisterScreen(navController = navController)
+            RegisterScreen(navController = navController, userViewModel)
         }
 
         composable(route = Routes.Home.route){
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, userViewModel, teamViewModel)
         }
 
         composable(route = Routes.MyTeam.route){
-            TeamMainScreen(navController = navController)
+            TeamMainScreen(navController = navController, userViewModel, teamViewModel)
         }
 
         composable(route = Routes.Schedule.route){
-            ScheduleScreen(navController = navController, globalViewModel)
+            ScheduleScreen(navController = navController, userViewModel)
         }
 
         composable(route = Routes.TeamInfo.route){
-            TeamInfoScreen(navController)
+            TeamInfoScreen(navController, userViewModel, teamViewModel)
         }
     }
 

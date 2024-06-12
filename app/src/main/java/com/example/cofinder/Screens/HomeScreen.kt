@@ -28,17 +28,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.Type
 import com.example.cofinder.Data.UserData
 import com.example.cofinder.R
 import com.example.cofinder.Repository.TeamViewModel
+import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.Screens.team.TeamList
 import com.example.cofinder.ui.theme.Typography
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(teamViewModel: TeamViewModel, user: UserData) {
+fun HomeScreen(navController: NavController, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
 //    var teams by remember { mutableStateOf(
 //        listOf(
 //            Team(1, "모프 완전정복", Type.STUDY, "모바일 프로그래밍", 5, User(1, "앨리스")),
@@ -46,7 +48,7 @@ fun HomeScreen(teamViewModel: TeamViewModel, user: UserData) {
 //        )) }
     // TeamList를 불러와서 보여줘야 함
 
-    var teams = user.projects
+//    var teams = user.projects
 
     var query by remember{ mutableStateOf("")}
     var showDialog by remember {
@@ -94,18 +96,18 @@ fun HomeScreen(teamViewModel: TeamViewModel, user: UserData) {
                     Text("검색")
                 }
             }
-            TeamList(teams = user.projects, user)
+//            TeamList(teams = user.projects, user)
         }
 
     }
 
-    if(showDialog){
-        NewTeamDialog(
-            onDismiss = { showDialog = false },
-            teamViewModel,
-            user
-        )
-    }
+//    if(showDialog){
+//        NewTeamDialog(
+//            onDismiss = { showDialog = false },
+//            teamViewModel,
+//            user
+//        )
+//    }
 }
 
 @Composable

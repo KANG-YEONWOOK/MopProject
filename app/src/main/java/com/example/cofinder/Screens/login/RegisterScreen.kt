@@ -45,7 +45,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
     val context = LocalContext.current
     val table = Firebase.database.getReference("")
     val repository = UserRepository(table)

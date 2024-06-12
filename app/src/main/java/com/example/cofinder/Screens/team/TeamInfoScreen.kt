@@ -29,12 +29,14 @@ import com.example.cofinder.Bars.TopBar
 import com.example.cofinder.Data.ScheduleData
 import com.example.cofinder.R
 import com.example.cofinder.Data.Type
+import com.example.cofinder.Repository.TeamViewModel
+import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.Screens.schedule.ScheduleCancelButton
 import com.example.cofinder.ui.theme.Typography
 
 
 @Composable
-fun TeamInfoScreen(navController: NavController, ) {
+fun TeamInfoScreen(navController: NavController, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
     Scaffold(
         topBar = { TopBar(navController) }
     ) {
