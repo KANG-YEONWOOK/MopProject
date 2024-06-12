@@ -85,9 +85,9 @@ fun ScheduleCard(scheduleData: ScheduleData) {
 @Composable
 fun ScheduleCancelButton() {
     val buttonColor = ButtonDefaults.buttonColors(
-        containerColor = colorResource(R.color.greengray),
+        containerColor = colorResource(R.color.middlegreen),
         contentColor = Color.White,
-        disabledContainerColor = colorResource(id = R.color.greengray),
+        disabledContainerColor = colorResource(id = R.color.middlegreen),
         disabledContentColor = Color.White
     )
     Button(modifier = Modifier

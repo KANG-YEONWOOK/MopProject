@@ -73,7 +73,7 @@ fun TeamCard2(team: TeamData, navController: NavController, teamViewModel: TeamV
             .fillMaxWidth()
             .padding(8.dp),
         onClick = {
-            teamViewModel.selectedTeam.value = team
+            teamViewModel.selectTeamInfo(team)
             navController.navigate(Routes.TeamInfo.route)
         }
     ) {

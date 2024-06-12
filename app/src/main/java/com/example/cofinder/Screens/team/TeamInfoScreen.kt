@@ -1,21 +1,28 @@
 package com.example.cofinder.Screens.team
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +36,7 @@ import com.example.cofinder.Bars.TopBar
 import com.example.cofinder.Data.ScheduleData
 import com.example.cofinder.R
 import com.example.cofinder.Data.Type
+import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.Repository.TeamViewModel
 import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.Screens.schedule.ScheduleCancelButton
@@ -40,31 +48,71 @@ fun TeamInfoScreen(navController: NavController, teamViewModel: TeamViewModel) {
     Scaffold(
         topBar = { TopBar(navController) }
     ) {
-        TeamInfoScreenContent(contentPadding = it, teamViewModel)
+        TeamInfoScreenContent(navController, contentPadding = it, teamViewModel)
     }
 }
 
 @Composable
-fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewModel) {
+fun TeamInfoScreenContent(navController: NavController, contentPadding:PaddingValues, teamViewModel: TeamViewModel) {
 
+    var expanded by remember{ mutableStateOf(false) }
+
+    val teamNow by teamViewModel.selectedTeam.collectAsState()
     LazyColumn(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item{
-            Text("${teamViewModel.selectedTeam.value}", style = Typography.titleMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
+            Text(teamNow.name, style = Typography.titleMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(8.dp))
+            Divider(modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp), thickness = 3.dp)
         }
-//        items() { schedule ->
-//            TeamScheduleCard(schedule)
-//        }
+        item{
+            Text("게시글", style = Typography.bodyLarge, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
+            Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
+        }
+        if(teamNow.post.isEmpty()){
+            item{
+                Box(modifier = Modifier
+                .border(1.dp, colorResource(id = R.color.greengray))
+                .background(colorResource(id = R.color.white))
+                .fillMaxWidth()){
+                    Text("게시글이 없습니다", style = Typography.bodyLarge, color = colorResource(id = R.color.middlegreen), modifier = Modifier.padding(12.dp))
+                }
+            }
+        }else{
+            items(teamNow.post){post->
+                Box(modifier = Modifier
+                    .border(1.dp, colorResource(id = R.color.greengray))
+                    .background(colorResource(id = R.color.white))
+                    .fillMaxWidth()
+                    .clickable { expanded != expanded }){
+                    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()) {
+                        Text(post.title, style = Typography.bodyLarge, color = colorResource(id = R.color.middlegreen), modifier = Modifier.padding(12.dp))
+                        if(expanded){
+                            Divider(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 20.dp, end = 20.dp), thickness = 1.dp)
+                            Text(post.contents, style = Typography.bodyMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
+                        }
+                    }
+                }
+            }
+        }
+
+        items(teamNow.schedule) { schedule ->
+            TeamScheduleCard(schedule)
+        }
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TeamScheduleCard( scheduleData:ScheduleData) {
+fun TeamScheduleCard( scheduleData:ScheduleData ) {
 
     var expanded by remember{ mutableStateOf(false) }
 
