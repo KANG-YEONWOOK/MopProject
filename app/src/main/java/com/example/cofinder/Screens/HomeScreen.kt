@@ -168,7 +168,7 @@ fun NewTeamDialog(onDismiss: () -> Unit, teamViewModel: TeamViewModel, user: Use
                     newTeam.addUser(user)
                     teamViewModel.InsertTeam(newTeam)
                     Log.d("DB", "팀 생성")
-                    user.projects.add(newTeam)
+                    //user.projects.add(newTeam)
                     //유저의 프로젝트 목록에 해당 팀의 id를 넣어야함!!
                 },colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.darkgreen)

@@ -37,7 +37,7 @@ fun NavGraphBuilder.MainNavGraph(navController: NavHostController, userViewModel
         }
 
         composable(route = Routes.TeamInfo.route){
-            TeamInfoScreen(navController, teamViewModel)
+            TeamInfoScreen(navController, userViewModel, teamViewModel)
         }
     }
 

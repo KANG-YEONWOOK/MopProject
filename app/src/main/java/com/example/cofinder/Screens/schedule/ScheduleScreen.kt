@@ -66,7 +66,7 @@ fun ScheduleScreen(navController: NavController, userViewModel: UserViewModel) {
 @Composable
 fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingValues) {
     val userdatas by userViewModel.user.collectAsState()
-    val schedules = userdatas!!.schedules
+    val schedules = userdatas!!.email
     var scheduleNow = listOf<ScheduleData>()
 
     var scheduleName by remember { mutableStateOf("") }
@@ -288,7 +288,7 @@ fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingV
             //selectedDate에 저장되어있는 일정 중
             //날짜에 맞는거 불러와서 걔들만 렌더링
         }
-        scheduleNow = schedules!!.filter { it-> it.date == selectedDate }
+        //scheduleNow = !!.filter { it-> it.date == selectedDate }
         items(scheduleNow) {
             ScheduleCard(it)
         }

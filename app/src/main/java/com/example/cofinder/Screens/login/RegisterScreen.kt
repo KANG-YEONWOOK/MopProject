@@ -41,12 +41,18 @@ import com.example.cofinder.Data.UserData
 import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.R
 import com.example.cofinder.Repository.UserRepository
+import com.example.cofinder.Repository.UserService
 import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.Repository.UserViewModelFactory
 import com.example.cofinder.ui.theme.Typography
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
@@ -55,9 +61,17 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
         RegisterScreenContent(navController, userViewModel, contentPadding = it)
     }
 }
+private const val BASE_URL = "http://192.0.0.2:9090/"
+private val retrofit = Retrofit.Builder()
+    .baseUrl(BASE_URL)
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()
 
+private val userService = retrofit.create(UserService::class.java)
 @Composable
 fun RegisterScreenContent(navController: NavController, userviewModel: UserViewModel, contentPadding:PaddingValues) {
+
+
     val coroutineScope = rememberCoroutineScope()
     var userID by remember {
         mutableStateOf("")
@@ -140,19 +154,42 @@ fun RegisterScreenContent(navController: NavController, userviewModel: UserViewM
             colors = buttonColor1,
             onClick = {
                 coroutineScope.launch {
-                val newUser = UserData(studentID = userID, password = userPasswd, loginStatus = true)
-                Log.d("studentid", userID)
-                Log.d("passwd", userPasswd)
-                userviewModel.InsertUser(newUser)
-                navController.navigate(Routes.Login.route) {
-                    popUpTo(Routes.Login.route) {
-                        saveState = true
-                        inclusive = false
+                    try {
+                        val newUser = UserData(
+                            username = "newUser23",
+                            password = "securePassword12345",
+                            email = "newuser21@example.com"
+                        )
+                        val createdUser = userService.registerUser(newUser)
+                        createdUser.enqueue(object : Callback<Void>{
+                            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                if (response.isSuccessful) {
+                                    println("User registered successfully")
+                                } else {
+                                    println("Request failed: ${response.code()}")
+                                }
+
+                            }
+
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                t.printStackTrace()
+                            }
+                        })
+                        // 사용자 정보 저장 성공 시 다음 화면으로 이동
+                        navController.navigate(Routes.Login.route) {
+//                            popUpTo(Routes.Login.route) {
+//                                saveState = true
+//                                inclusive = false
+//                            }
+//                            launchSingleTop = true
+//                            restoreState = true
+                        }
+                    } catch (e: Exception) {
+                        // 사용자 정보 저장 실패 시 오류 처리
+                        Log.e("UserRegistration", "Error creating user: $e")
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
-            }}) {
+            }) {
             Text("회원가입", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
         }
 

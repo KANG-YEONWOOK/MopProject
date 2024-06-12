@@ -163,8 +163,8 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
 
                         userViewModel.UserList.collect { userList ->
                             for (user in userList) {
-                                if (user.studentID == userID && user.password == userPasswd) {
-                                    userViewModel.user.value?.loginStatus = true
+                                if (user.username == userID && user.password == userPasswd) {
+                                    userViewModel.user.value?.email = ""
                                     loginSuccessful = true
                                     navController.navigate(Routes.Home.route) {
                                 popUpTo(Routes.Home.route) {

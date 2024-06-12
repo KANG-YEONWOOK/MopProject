@@ -12,16 +12,16 @@ import kotlinx.coroutines.tasks.await
 
 class UserRepository(private val table : DatabaseReference) {
     suspend fun InsertUser(userData: UserData) {
-        table.child(userData.studentID.toString()).setValue(userData).await()
+        table.child(userData.username.toString()).setValue(userData).await()
     }
 
     fun UpdateUser(userData: UserData) {
-        table.child(userData.studentID.toString())
-            .child("studentID").setValue(userData.studentID)
+        table.child(userData.username.toString())
+            .child("studentID").setValue(userData.password)
     }
 
     fun DeleteUser(userData: UserData) {
-        table.child(userData.studentID.toString()).removeValue()
+        table.child(userData.username.toString()).removeValue()
     }
 
     suspend fun getAllUsers(): Flow<List<UserData>> = callbackFlow {
