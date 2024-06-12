@@ -2,6 +2,7 @@ package com.example.cofinder.Screens.schedule
 
 import android.icu.text.SimpleDateFormat
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +34,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -49,6 +52,7 @@ import com.example.cofinder.R
 import com.example.cofinder.Data.Type
 import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.ui.theme.Typography
+import kotlinx.coroutines.flow.filter
 import java.util.Locale
 
 @Composable
@@ -61,15 +65,14 @@ fun ScheduleScreen(navController: NavController, userViewModel: UserViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingValues) {
-    val schedules = listOf(
-        ScheduleData(date=1718755200000, hour = 12, min = 8, schedulename="모바일프로그래밍 스터디", type= Type.STUDY, subject="모바일프로그래밍"),
-        ScheduleData(date=1718755200000, hour = 16, min = 12, schedulename="산학협력프로젝트 팀플", type=Type.PROJECT, subject="산학협력프로젝트")
-    ) //6월 19일 클릭하면 확인할 수 있음
+    val userdatas by userViewModel.user.collectAsState()
+    val schedules = userdatas!!.schedules
     var scheduleNow = listOf<ScheduleData>()
 
     var scheduleName by remember { mutableStateOf("") }
     var subjectName by remember { mutableStateOf("") }
     var studyOrProject by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     val dateFormatter = DatePickerFormatter()
     val datePickerState = rememberDatePickerState()
@@ -253,16 +256,26 @@ fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingV
                                     colors = buttonColor,
                                     onClick = {
                                         val scheduleType = if(studyOrProject) Type.PROJECT else Type.STUDY
-                                        val newSchedule = ScheduleData(
-                                            date = selectedDate,
-                                            hour = timePickerState.hour,
-                                            min = timePickerState.minute,
-                                            schedulename = scheduleName,
-                                            type = scheduleType,
-                                            subject = subjectName
-                                        )
+                                        if(scheduleName == ""){
+                                            Toast.makeText(context,"일정 이름을 입력해주세요",Toast.LENGTH_SHORT)
+                                        }else if(subjectName == ""){
+                                            Toast.makeText(context,"모임 주제를 입력해주세요",Toast.LENGTH_SHORT)
+                                        }
+                                        else{
+                                            val newSchedule = ScheduleData(
+                                                date = selectedDate,
+                                                hour = timePickerState.hour,
+                                                min = timePickerState.minute,
+                                                schedulename = scheduleName,
+                                                type = scheduleType,
+                                                subject = subjectName
+                                            )
 //                                        userViewModel.userData.schedules?.add(newSchedule)
 //                                        Log.i("userdata","${userViewModel.userData.schedules}")
+                                            //db에 추가
+                                        }
+
+
                                         expanded = !expanded
                                     }) {
                                     Text("일정 등록", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
@@ -275,7 +288,7 @@ fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingV
             //selectedDate에 저장되어있는 일정 중
             //날짜에 맞는거 불러와서 걔들만 렌더링
         }
-        scheduleNow = schedules.filter { it-> it.date == selectedDate }
+        scheduleNow = schedules!!.filter { it-> it.date == selectedDate }
         items(scheduleNow) {
             ScheduleCard(it)
         }

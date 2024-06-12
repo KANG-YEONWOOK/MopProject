@@ -21,7 +21,13 @@ class TeamViewModelFactory(private val repository: TeamRepository): ViewModelPro
 
 class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
 
-    var selectedTeam = mutableStateOf(TeamData())
+    private var _selectedTeam = MutableStateFlow<TeamData>(TeamData())
+    val selectedTeam = _selectedTeam.asStateFlow()
+
+    //이 함수는 selectedTeam변수 값을 정하는 함수로 db와 통신하지 않아 위에 적음
+    fun selectTeamInfo(team: TeamData) {
+        _selectedTeam.value = team
+    }
 
     private var _TeamList = MutableStateFlow<List<TeamData>>(emptyList())
     val TeamList = _TeamList.asStateFlow()
