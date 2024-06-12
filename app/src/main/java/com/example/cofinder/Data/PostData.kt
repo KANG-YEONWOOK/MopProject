@@ -1,7 +1,5 @@
 package com.example.cofinder.Data
 
-import com.example.cofinder.Teams.Type
-
 class PostData(
     var Postid: Long,
     var title: String,

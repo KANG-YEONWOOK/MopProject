@@ -1,7 +1,5 @@
 package com.example.cofinder.Data
 
-import com.example.cofinder.Teams.Type
-
 data class ScheduleData(
     var date: Long?,
     var hour: Int,
