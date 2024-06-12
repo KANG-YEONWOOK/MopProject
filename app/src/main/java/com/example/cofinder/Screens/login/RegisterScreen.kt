@@ -1,5 +1,6 @@
 package com.example.cofinder.Screens.login
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cofinder.Bars.RegisterTopBar
 import com.example.cofinder.Data.UserData
+import com.example.cofinder.Navigation.Routes
 import com.example.cofinder.R
 import com.example.cofinder.Repository.UserRepository
 import com.example.cofinder.Repository.UserViewModel
@@ -43,17 +46,19 @@ import com.example.cofinder.Repository.UserViewModelFactory
 import com.example.cofinder.ui.theme.Typography
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 
     Scaffold(topBar = { RegisterTopBar(navController = navController)}){
-        RegisterScreenContent(userViewModel, contentPadding = it)
+        RegisterScreenContent(navController, userViewModel, contentPadding = it)
     }
 }
 
 @Composable
-fun RegisterScreenContent(viewModel: UserViewModel, contentPadding:PaddingValues) {
+fun RegisterScreenContent(navController: NavController, userviewModel: UserViewModel, contentPadding:PaddingValues) {
+    val coroutineScope = rememberCoroutineScope()
     var userID by remember {
         mutableStateOf("")
     }
@@ -134,9 +139,20 @@ fun RegisterScreenContent(viewModel: UserViewModel, contentPadding:PaddingValues
             .width(280.dp),
             colors = buttonColor1,
             onClick = {
+                coroutineScope.launch {
                 val newUser = UserData(studentID = userID, password = userPasswd, loginStatus = true)
-                viewModel.InsertUser(newUser)
-            }) {
+                Log.d("studentid", userID)
+                Log.d("passwd", userPasswd)
+                userviewModel.InsertUser(newUser)
+                navController.navigate(Routes.Login.route) {
+                    popUpTo(Routes.Login.route) {
+                        saveState = true
+                        inclusive = false
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }}) {
             Text("회원가입", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
         }
 

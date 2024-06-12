@@ -144,19 +144,44 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
                 .width(280.dp),
                 colors = buttonColor1,
                 onClick = {
-                    val nowUser = userViewModel.getUserInfo(userID, userPasswd)
-                    if(nowUser != null) {
-                        navController.navigate(Routes.Home.route) {
-                            popUpTo(Routes.Home.route) {
-                                saveState = true
-                                inclusive = false
+//                    val nowUser = userViewModel.getUserInfo(userID, userPasswd)
+//                    if(nowUser != null) {
+//                        navController.navigate(Routes.Home.route) {
+//                            popUpTo(Routes.Home.route) {
+//                                saveState = true
+//                                inclusive = false
+//                            }
+//                            launchSingleTop = true
+//                            restoreState = true
+//                        }
+//                    }else{
+//                        userID = ""
+//                        userPasswd = ""
+//                    }
+                    coroutineScope.launch {
+                        var loginSuccessful = false
+
+                        userViewModel.UserList.collect { userList ->
+                            for (user in userList) {
+                                if (user.studentID == userID && user.password == userPasswd) {
+                                    userViewModel.user.value?.loginStatus = true
+                                    loginSuccessful = true
+                                    navController.navigate(Routes.Home.route) {
+                                popUpTo(Routes.Home.route) {
+                                    saveState = true
+                                    inclusive = false
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
+                                    break
+                                }
+                            }
+                            if (!loginSuccessful) {
+                                Toast.makeText(context, "로그인 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
-                    }else{
-                        userID = ""
-                        userPasswd = ""
                     }
                 }) {
                 Text("로그인", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
@@ -166,25 +191,7 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
                 .width(280.dp),
                 colors = buttonColor2,
                 onClick = {
-                    coroutineScope.launch {
-                        var loginSuccessful = false
-
-                        userViewModel.UserList.collect { userList ->
-                            for (user in userList) {
-                                if (user.studentID == userID && user.password == userPasswd) {
-                                    userViewModel.user.value?.loginStatus = true
-                                    loginSuccessful = true
-                                    navController.navigate(Routes.Register.route)
-                                    break
-                                }
-                            }
-                            if (!loginSuccessful) {
-                                Toast.makeText(context, "로그인 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        }
-                        Toast.makeText(context, "로그인 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
-                    }
+                    navController.navigate(Routes.Register.route)
                 }
             ) {
                 Text("회원가입", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))

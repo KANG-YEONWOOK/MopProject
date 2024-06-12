@@ -36,7 +36,7 @@ import com.example.cofinder.ui.theme.Typography
 
 
 @Composable
-fun TeamInfoScreen(navController: NavController, teamViewModel: TeamViewModel) {
+fun TeamInfoScreen(navController: NavController, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
     Scaffold(
         topBar = { TopBar(navController) }
     ) {
