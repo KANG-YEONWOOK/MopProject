@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.cofinder.Data.TeamData
+import com.example.cofinder.Data.UserData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -24,6 +25,9 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
 
     private var _TeamList = MutableStateFlow<List<TeamData>>(emptyList())
     val TeamList = _TeamList.asStateFlow()
+
+    private val _team = MutableStateFlow<TeamData?>(null)
+    val team = _team.asStateFlow()
 
     init {
         getAllTeams()

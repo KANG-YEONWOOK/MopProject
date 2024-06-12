@@ -46,13 +46,9 @@ import com.google.firebase.database.database
 
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
-    val context = LocalContext.current
-    val table = Firebase.database.getReference("")
-    val repository = UserRepository(table)
-    val factory = UserViewModelFactory(repository)
-    val viewModel: UserViewModel = viewModel(factory = factory)
+
     Scaffold(topBar = { RegisterTopBar(navController = navController)}){
-        RegisterScreenContent(viewModel, contentPadding = it)
+        RegisterScreenContent(userViewModel, contentPadding = it)
     }
 }
 

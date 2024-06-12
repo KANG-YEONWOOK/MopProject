@@ -1,6 +1,7 @@
 package com.example.cofinder.Screens.login
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,20 +44,12 @@ import com.example.cofinder.Repository.UserViewModelFactory
 import com.example.cofinder.ui.theme.Typography
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.observeOn
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) {
-//    val navViewModel: NavViewModel =
-//        viewModel(viewModelStoreOwner = LocalNavGraphViewModelStoreOwner.current)
-
-//    val context = LocalContext.current
-//    val activity = context as Activity
-//    val table = Firebase.database.getReference("")
-//    val repository = UserRepository(table)
-////    val factory = UserViewModelFactory(repository)
-//    val viewModel: UserViewModel = viewModel(factory = factory)
-//    val authManager = AuthManager(activity)
 
     var userID by remember {
         mutableStateOf("")
@@ -67,6 +61,8 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     val buttonColor1 = ButtonDefaults.buttonColors(
         containerColor = colorResource(id = R.color.darkgreen),
@@ -169,11 +165,30 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
                 .padding(6.dp)
                 .width(280.dp),
                 colors = buttonColor2,
-                onClick = { navController.navigate(Routes.Register.route) }) {
+                onClick = {
+                    coroutineScope.launch {
+                        var loginSuccessful = false
+
+                        userViewModel.UserList.collect { userList ->
+                            for (user in userList) {
+                                if (user.studentID == userID && user.password == userPasswd) {
+                                    userViewModel.user.value?.loginStatus = true
+                                    loginSuccessful = true
+                                    navController.navigate(Routes.Register.route)
+                                    break
+                                }
+                            }
+                            if (!loginSuccessful) {
+                                Toast.makeText(context, "로그인 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                        Toast.makeText(context, "로그인 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            ) {
                 Text("회원가입", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
             }
-
         }
     }
-
 }

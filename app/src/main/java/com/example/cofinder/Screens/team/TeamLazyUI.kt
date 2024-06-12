@@ -17,6 +17,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,15 +31,18 @@ import androidx.compose.ui.unit.sp
 import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.UserData
 import com.example.cofinder.R
+import kotlinx.coroutines.flow.StateFlow
 
 
 @Composable
-fun TeamList(teams: List<TeamData>, userData: UserData) {
+fun TeamList(teams: StateFlow<List<TeamData>>, userData: UserData) {
+    val teamList by teams.collectAsState()
+
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(teams) { team ->
+        items(teamList) { team ->
             TeamCard(team, userData)
         }
     }

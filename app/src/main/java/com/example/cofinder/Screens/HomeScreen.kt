@@ -19,6 +19,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,14 +42,8 @@ import com.example.cofinder.ui.theme.Typography
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(navController: NavController, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
-//    var teams by remember { mutableStateOf(
-//        listOf(
-//            Team(1, "모프 완전정복", Type.STUDY, "모바일 프로그래밍", 5, User(1, "앨리스")),
-//            Team(2, "기말 프로젝트", Type.PROJECT, "모바일 프로그래밍", 10, User(2, "밥"))
-//        )) }
-    // TeamList를 불러와서 보여줘야 함
 
-//    var teams = user.projects
+    val userdatas by userViewModel.user.collectAsState()
 
     var query by remember{ mutableStateOf("")}
     var showDialog by remember {
@@ -96,18 +91,18 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel, teamV
                     Text("검색")
                 }
             }
-//            TeamList(teams = user.projects, user)
+            TeamList(teams = teamViewModel.TeamList, userdatas!!)
         }
 
     }
 
-//    if(showDialog){
-//        NewTeamDialog(
-//            onDismiss = { showDialog = false },
-//            teamViewModel,
-//            user
-//        )
-//    }
+    if(showDialog){
+        NewTeamDialog(
+            onDismiss = { showDialog = false },
+            teamViewModel,
+            userdatas!!
+        )
+    }
 }
 
 @Composable
@@ -166,13 +161,14 @@ fun NewTeamDialog(onDismiss: () -> Unit, teamViewModel: TeamViewModel, user: Use
                 onClick = {
                     val newTeam = TeamData(
                         (0..Long.MAX_VALUE).random(), // Random ID for the team
-                        name = "TeamName", // Example name, replace with actual data
-                        maxNumber = 4,
-                        type = Type.PROJECT
+                        name = name, // Example name, replace with actual data
+                        maxNumber = maxMembers.toInt(),
+                        type = type
                     )
                     newTeam.addUser(user)
                     teamViewModel.InsertTeam(newTeam)
                     Log.d("DB", "팀 생성")
+                    user.projects.add(newTeam)
                     //유저의 프로젝트 목록에 해당 팀의 id를 넣어야함!!
                 },colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.darkgreen)
