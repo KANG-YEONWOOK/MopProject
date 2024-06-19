@@ -89,8 +89,8 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
         if(teamNow.post.isEmpty()){
             item{
                 Box(modifier = Modifier
-                    .border(1.dp, colorResource(id = R.color.greengray))
                     .padding(12.dp)
+                    .border(1.dp, colorResource(id = R.color.greengray))
                     .background(colorResource(id = R.color.white))
                     .fillMaxWidth()){
                     Column(modifier = Modifier
