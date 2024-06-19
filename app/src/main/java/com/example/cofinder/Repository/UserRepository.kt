@@ -128,4 +128,23 @@ class UserRepository(private val table : DatabaseReference) {
         }
     }
 
+    suspend fun addTeams(userId: String, teamData: TeamData): UserData?{
+        return try {
+            val snapshot = table.child(userId).get().await()
+            val user = snapshot.getValue(UserData::class.java)
+
+            if (user != null) {
+                val teamsSnapshot = table.child(userId).child("projects").get().await()
+                val teamList = teamsSnapshot.children.mapNotNull { it.getValue(TeamData::class.java) }.toMutableList()
+                teamList.add(teamData)
+                table.child(userId).child("projects").setValue(teamList).await()
+            } else {
+                table.child(userId).child("projects").setValue(listOf(teamData)).await()
+            }
+            return user
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 }
