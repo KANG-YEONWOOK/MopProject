@@ -52,13 +52,13 @@ fun TeamMainScreenContent(navController: NavController, contentPadding: PaddingV
     Column(modifier = Modifier.padding(contentPadding),
         verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "나의 팀", style = Typography.titleMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
-        TeamList(teams = userViewModel.myTeam, navController = navController, teamViewModel = teamViewModel)
+        TeamList2(teams = userViewModel.myTeam, navController = navController, teamViewModel = teamViewModel)
     }
 }
 
 
 @Composable
-fun TeamList(teams: StateFlow<List<TeamData>>, navController: NavController, teamViewModel: TeamViewModel) {
+fun TeamList2(teams: StateFlow<List<TeamData>>, navController: NavController, teamViewModel: TeamViewModel) {
     val teamList by teams.collectAsState()
 
     LazyColumn(
@@ -66,14 +66,14 @@ fun TeamList(teams: StateFlow<List<TeamData>>, navController: NavController, tea
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(teamList) { team ->
-            TeamCard(team, navController, teamViewModel)
+            TeamCard2(team, navController, teamViewModel)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TeamCard(team: TeamData, navController: NavController, teamViewModel: TeamViewModel) {
+fun TeamCard2(team: TeamData, navController: NavController, teamViewModel: TeamViewModel) {
 
     ElevatedCard(
         modifier = Modifier
