@@ -1,6 +1,7 @@
 package com.example.cofinder.Repository
 
 import android.util.Log
+import com.example.cofinder.Data.ScheduleData
 import com.example.cofinder.Data.UserData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -80,6 +81,25 @@ class UserRepository(private val table : DatabaseReference) {
             }
         } catch (e: Exception) {
             true
+        }
+    }
+
+    suspend fun addSchedule(userId: String, scheduleData: ScheduleData): UserData?{
+        return try {
+            val snapshot = table.child(userId).get().await()
+            val user = snapshot.getValue(UserData::class.java)
+
+            if (user != null) {
+                val schedulesSnapshot = table.child(userId).child("schedules").get().await()
+                val schedulesList = schedulesSnapshot.children.mapNotNull { it.getValue(ScheduleData::class.java) }.toMutableList()
+                schedulesList.add(scheduleData)
+                table.child(userId).child("schedules").setValue(schedulesList).await()
+            } else {
+                table.child(userId).child("schedules").setValue(listOf(scheduleData)).await()
+            }
+            return user
+        } catch (e: Exception) {
+            null
         }
     }
 

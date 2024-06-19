@@ -257,9 +257,9 @@ fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingV
                                     onClick = {
                                         val scheduleType = if(studyOrProject) Type.PROJECT else Type.STUDY
                                         if(scheduleName == ""){
-                                            Toast.makeText(context,"일정 이름을 입력해주세요",Toast.LENGTH_SHORT)
+                                            Toast.makeText(context,"일정 이름을 입력해주세요",Toast.LENGTH_SHORT).show()
                                         }else if(subjectName == ""){
-                                            Toast.makeText(context,"모임 주제를 입력해주세요",Toast.LENGTH_SHORT)
+                                            Toast.makeText(context,"모임 주제를 입력해주세요",Toast.LENGTH_SHORT).show()
                                         }
                                         else{
                                             val newSchedule = ScheduleData(
@@ -270,6 +270,7 @@ fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingV
                                                 type = scheduleType,
                                                 subject = subjectName
                                             )
+                                            userViewModel.addSchedule(userdatas!!.studentID,newSchedule)
 //                                        userViewModel.userData.schedules?.add(newSchedule)
 //                                        Log.i("userdata","${userViewModel.userData.schedules}")
                                             //db에 추가
@@ -288,7 +289,7 @@ fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingV
             //selectedDate에 저장되어있는 일정 중
             //날짜에 맞는거 불러와서 걔들만 렌더링
         }
-        scheduleNow = schedules!!.filter { it-> it.date == selectedDate }
+        scheduleNow = schedules!!.filter { it.date == selectedDate }
         items(scheduleNow) {
             ScheduleCard(it)
         }

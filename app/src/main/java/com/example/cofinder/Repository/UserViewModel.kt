@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.cofinder.Data.ScheduleData
 import com.example.cofinder.Data.UserData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -89,6 +90,13 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
         viewModelScope.launch {
             val registered = repository.userCheck(userId)
             _registeredId.value = registered
+        }
+    }
+
+    fun addSchedule(userId: String, scheduleData: ScheduleData){
+        viewModelScope.launch{
+            val scheduleAddedUser = repository.addSchedule(userId,scheduleData)
+            _user.value = scheduleAddedUser
         }
     }
 }

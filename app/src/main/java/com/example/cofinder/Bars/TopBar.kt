@@ -24,11 +24,9 @@ fun TopBar(navController: NavController) {
         horizontalArrangement = Arrangement.SpaceBetween) {
         IconButton(onClick={navController.navigate(Routes.Home.route){
             popUpTo(Routes.Home.route) {
-                saveState = true
                 inclusive = true
             }
             launchSingleTop = true
-            restoreState = true
         } }){
             Icon(Icons.Default.ArrowBackIosNew,null,tint = colorResource(id = R.color.darkgreen))
         }
@@ -37,13 +35,5 @@ fun TopBar(navController: NavController) {
             style = Typography.titleMedium,
             color = colorResource(id = R.color.darkgreen))
     }
-
-//홈으로 돌아가는 뒤로가기 버튼
-//    Scaffold (topBar = {
-//        TopBar(navController = navController)
-//    }){
-//        //화면구성
-//    }
-//이런식으로 사용
 
 }
