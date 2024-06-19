@@ -109,4 +109,11 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
             _user.value = scheduleAddedUser
         }
     }
+
+    fun addTeam(userId: String, teamData: TeamData){
+        viewModelScope.launch{
+            val teamAddedUser = repository.addTeams(userId,teamData)
+            _user.value = teamAddedUser
+        }
+    }
 }
