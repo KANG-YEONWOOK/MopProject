@@ -1,6 +1,7 @@
 package com.example.cofinder.Screens.login
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -46,6 +47,7 @@ import com.example.cofinder.Repository.UserViewModelFactory
 import com.example.cofinder.ui.theme.Typography
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -59,6 +61,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 @Composable
 fun RegisterScreenContent(navController: NavController, userViewModel: UserViewModel, contentPadding: PaddingValues) {
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     var userID by remember { mutableStateOf("") }
     var userPasswd by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -137,15 +140,23 @@ fun RegisterScreenContent(navController: NavController, userViewModel: UserViewM
             onClick = {
                 //회원가입 시 해당 계정으로 자동로그인
                 coroutineScope.launch {
-                    val newUser = UserData(studentID = userID, password = userPasswd, loginStatus = true)
                     Log.d("studentid", userID)
                     Log.d("passwd", userPasswd)
-                    userViewModel.insertUser(newUser)
-                    userViewModel.login.value = true
-                    userViewModel.getUserInfo(userID,userPasswd)
-                    navController.navigate(Routes.Home.route){
-                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                        launchSingleTop = true
+                    userViewModel.userCheck(userID)
+                    delay(1000)
+                    if(userViewModel.registeredId.value){
+                        Toast.makeText(context, "이미 해당 아이디로 가입된 사용자가 있습니다", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    else{
+                        val newUser = UserData(studentID = userID, password = userPasswd, loginStatus = true)
+                        userViewModel.insertUser(newUser)
+                        userViewModel.login.value = true
+                        userViewModel.userLogin(userID,userPasswd)
+                        navController.navigate(Routes.Home.route){
+                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }
                 }
             }) {

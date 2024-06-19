@@ -163,7 +163,7 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
 //                        userPasswd = ""
 //                    }
                     coroutineScope.launch {
-                        userViewModel.getUserInfo(userID,userPasswd)
+                        userViewModel.userLogin(userID,userPasswd)
                         delay(1000) //데이터베이스에 반영될 때까지 기다림
                         if(userViewModel.user.value != null){
                             userViewModel.login.value = true

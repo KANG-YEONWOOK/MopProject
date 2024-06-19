@@ -52,7 +52,7 @@ class UserRepository(private val table : DatabaseReference) {
         }
     }
 
-    suspend fun getUserInfo(userId: String, password: String): UserData?{
+    suspend fun userLogin(userId: String, password: String): UserData?{
         return try {
             val snapshot = table.child(userId).get().await()
             val user = snapshot.getValue(UserData::class.java)
@@ -65,6 +65,21 @@ class UserRepository(private val table : DatabaseReference) {
             }
         } catch (e: Exception) {
             null
+        }
+    }
+
+    suspend fun userCheck(userId: String): Boolean{
+        return try {
+            val snapshot = table.child(userId).get().await()
+            val user = snapshot.getValue(UserData::class.java)
+            if (user != null && user.studentID == userId) {
+                true
+            } else {
+                Log.d("getuserinfo", "else")
+                false
+            }
+        } catch (e: Exception) {
+            true
         }
     }
 
