@@ -31,6 +31,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -71,6 +72,11 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
     var expanded by remember{ mutableStateOf(false) }
 
     val teamNow by teamViewModel.selectedTeam.collectAsState()
+
+    LaunchedEffect(Unit) {
+        teamViewModel.getTeam(teamViewModel.selectedTeam.value.TeamID.toString())
+    }
+
     LazyColumn(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -223,7 +229,7 @@ fun NewPostDialog(onDismiss: () -> Unit, teamViewModel: TeamViewModel) {
                 onClick = {
                     // 게시글 저장 로직을 여기에 추가
                     val teamData = teamViewModel.selectedTeam.value // 팀 데이터를 가져오는 로직을 여기에 추가
-                    teamViewModel.InsertPost(teamData, title, content)
+                    teamViewModel.insertPost(teamData, title, content)
                     onDismiss()
                 }, colors = buttonColor1
 
