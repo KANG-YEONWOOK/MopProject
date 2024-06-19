@@ -33,6 +33,9 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
     private val _registeredId = MutableStateFlow(false)
     val registeredId = _registeredId.asStateFlow()
 
+    private val _myTeam = MutableStateFlow<List<TeamData>>(emptyList())
+    val myTeam = _myTeam.asStateFlow()
+
     var login = mutableStateOf(false)
 
     init {
@@ -80,13 +83,12 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
         }
     }
 
-    fun getAllMyTeams():List<TeamData> {
+    fun getAllMyTeams() {
         viewModelScope.launch {
             repository.getAllMyteams().collect {
-                user.value!!.projects
+                _myTeam.value = user.value!!.projects
             }
         }
-        return user.value!!.projects
     }
 
     fun userLogin(userId: String, password: String) {
