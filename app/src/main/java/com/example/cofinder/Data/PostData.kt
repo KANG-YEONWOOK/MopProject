@@ -1,9 +1,9 @@
 package com.example.cofinder.Data
 
 class PostData(
-    var Postid: Long,
-    var title: String,
-    var contents: String
+    val title: String = "",
+    val contents: String = "",
+    val timestamp: Long = System.currentTimeMillis()
 ) {
-    constructor() : this(0, "noninfo", "noninfo")
+    constructor() : this("title", "contents")
 }

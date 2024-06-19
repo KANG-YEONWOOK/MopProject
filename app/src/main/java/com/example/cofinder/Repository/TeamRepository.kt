@@ -1,6 +1,8 @@
 package com.example.cofinder.Repository;
 
+import com.example.cofinder.Data.PostData
 import com.example.cofinder.Data.TeamData
+import com.example.cofinder.Data.UserData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -24,8 +26,26 @@ class TeamRepository(private val table :DatabaseReference) {
         table.child(teamData.TeamID.toString()).removeValue()
     }
 
-    suspend fun InsertPost(teamData: TeamData) {
 
+    suspend fun InsertPost(teamData: TeamData, title: String, contents: String): TeamData? {
+        return try {
+            val teamid = teamData.TeamID
+            val snapshot = table.child(teamid.toString()).get().await()
+            val team = snapshot.getValue(TeamData::class.java)
+
+            if (team != null) {
+                val post = PostData(title, contents)
+                val postList = team.post.toMutableList()
+                postList.add(post)
+                table.child(teamid.toString()).child("posts").setValue(postList).await()
+            } else {
+                val postList = listOf(PostData(title, contents))
+                table.child(teamid.toString()).child("posts").setValue(postList).await()
+            }
+            return team
+        } catch (e: Exception) {
+            null
+        }
     }
 
     suspend fun InsertSchedule(teamData: TeamData) {
