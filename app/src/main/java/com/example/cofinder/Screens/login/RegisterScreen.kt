@@ -61,7 +61,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
         RegisterScreenContent(navController, userViewModel, contentPadding = it)
     }
 }
-private const val BASE_URL = "http://192.0.0.2:9090/"
+private const val BASE_URL = "http://192.168.175.12:9090/"
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(GsonConverterFactory.create())
