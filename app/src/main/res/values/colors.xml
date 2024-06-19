@@ -11,5 +11,6 @@
     <color name="middlegreen">#78A15E</color>
     <color name="lightgreen">#C3E2B0</color>
     <color name="highlightgreen">#E7F5DD</color>
+    <color name="lightlightgreen">#F5FDEF</color>
     <color name="greengray">#B8C3B1</color>
 </resources>

@@ -29,8 +29,8 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
         _selectedTeam.value = team
     }
 
-    private var _TeamList = MutableStateFlow<List<TeamData>>(emptyList())
-    val TeamList = _TeamList.asStateFlow()
+    private var _teamList = MutableStateFlow<List<TeamData>>(emptyList())
+    val teamList = _teamList.asStateFlow()
 
     private val _team = MutableStateFlow<TeamData?>(null)
     val team = _team.asStateFlow()
@@ -93,7 +93,7 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
     fun getAllTeams() {
         viewModelScope.launch {
             repository.getAllTeams().collect {
-                _TeamList.value = it
+                _teamList.value = it
             }
         }
     }
