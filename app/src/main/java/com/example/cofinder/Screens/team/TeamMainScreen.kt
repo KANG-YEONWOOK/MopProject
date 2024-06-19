@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,6 +32,7 @@ import com.example.cofinder.R
 import com.example.cofinder.Repository.TeamViewModel
 import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.ui.theme.Typography
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun TeamMainScreen(navController: NavController, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
@@ -43,22 +45,27 @@ fun TeamMainScreen(navController: NavController, userViewModel: UserViewModel, t
 
 @Composable
 fun TeamMainScreenContent(navController: NavController, contentPadding: PaddingValues, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
-    var teams = userViewModel.getAllMyTeams()
+    LaunchedEffect(Unit){
+        userViewModel.getAllMyTeams()
+    }
+
     Column(modifier = Modifier.padding(contentPadding),
         verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "나의 팀", style = Typography.titleMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
-        TeamList(teams = teams, navController = navController, teamViewModel = teamViewModel)
+        TeamList(teams = userViewModel.myTeam, navController = navController, teamViewModel = teamViewModel)
     }
 }
 
 
 @Composable
-fun TeamList(teams: List<TeamData>, navController: NavController, teamViewModel: TeamViewModel) {
+fun TeamList(teams: StateFlow<List<TeamData>>, navController: NavController, teamViewModel: TeamViewModel) {
+    val teamList by teams.collectAsState()
+
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(teams) { team ->
+        items(teamList) { team ->
             TeamCard(team, navController, teamViewModel)
         }
     }
@@ -90,7 +97,7 @@ fun TeamCard(team: TeamData, navController: NavController, teamViewModel: TeamVi
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                Text(text = "현재 팀원수/${team.maxNumber}", fontSize = 16.sp)
+                Text(text = "${team.users.size}/${team.maxNumber}", fontSize = 16.sp)
             }
         }
     }

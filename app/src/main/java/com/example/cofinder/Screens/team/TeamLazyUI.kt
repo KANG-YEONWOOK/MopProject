@@ -65,7 +65,7 @@ fun TeamCard(team: TeamData, userData: UserData) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(text = "${team.type}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                Text(text = "현재 팀원수/${team.maxNumber}", fontSize = 16.sp)
+                Text(text = "${team.users.size}/${team.maxNumber}", fontSize = 16.sp)
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
@@ -73,7 +73,7 @@ fun TeamCard(team: TeamData, userData: UserData) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Text(text = "${team.name}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text(text = team.name, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Text(text = "${team.type}", fontSize = 16.sp)
             }
 
