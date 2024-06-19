@@ -81,6 +81,12 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
         }
     }
 
+    fun addUser(user: UserData, team: TeamData){
+        viewModelScope.launch{
+            repository.addUser(user, team)
+        }
+    }
+
 
 //    fun findTeam(Team: String) {
 //        viewModelScope.launch {

@@ -103,7 +103,7 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel, teamV
                     Text("검색")
                 }
             }
-            TeamList(teams = teamViewModel.teamList, userdatas!!)
+            TeamList(teams = teamViewModel.teamList, userdatas!!, userViewModel, teamViewModel)
         }
 
     }

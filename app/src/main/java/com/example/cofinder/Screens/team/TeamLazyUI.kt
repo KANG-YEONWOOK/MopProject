@@ -31,11 +31,13 @@ import androidx.compose.ui.unit.sp
 import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.UserData
 import com.example.cofinder.R
+import com.example.cofinder.Repository.TeamViewModel
+import com.example.cofinder.Repository.UserViewModel
 import kotlinx.coroutines.flow.StateFlow
 
 
 @Composable
-fun TeamList(teams: StateFlow<List<TeamData>>, userData: UserData) {
+fun TeamList(teams: StateFlow<List<TeamData>>, userData: UserData, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
     val teamList by teams.collectAsState()
 
     LazyColumn(
@@ -43,14 +45,14 @@ fun TeamList(teams: StateFlow<List<TeamData>>, userData: UserData) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(teamList) { team ->
-            TeamCard(team, userData)
+            TeamCard(team, userData, userViewModel, teamViewModel)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TeamCard(team: TeamData, userData: UserData) {
+fun TeamCard(team: TeamData, userData: UserData, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
     var expanded by remember { mutableStateOf(false) }
 
     ElevatedCard(
@@ -82,7 +84,8 @@ fun TeamCard(team: TeamData, userData: UserData) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = { /* 여기서 팀 참가 로직 처리 */
-                        team.addUser(userData)
+                        userViewModel.addTeam(userViewModel.user.value!!.studentID,team)
+                        teamViewModel.addUser(userViewModel.user.value!!, team)
                         Log.d("DB", "팀 참가")},
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     colors = ButtonDefaults.buttonColors(

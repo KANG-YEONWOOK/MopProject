@@ -60,6 +60,22 @@ class TeamRepository(private val table :DatabaseReference) {
 
     }
 
+    suspend fun addUser(user: UserData, team: TeamData): UserData? {
+        return try {
+            val userInTeamsSnapshot = table.child(team.TeamID.toString()).child("users").get().await()
+            val userList = userInTeamsSnapshot.children.mapNotNull { it.getValue(UserData::class.java) }.toMutableList()
+
+            if(!userList.any{it.studentID == user.studentID}){
+                userList.add(user)
+                table.child(team.TeamID.toString()).child("users").setValue(userList).await()
+            }
+            return user
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+
     suspend fun getAllTeams(): Flow<List<TeamData>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
