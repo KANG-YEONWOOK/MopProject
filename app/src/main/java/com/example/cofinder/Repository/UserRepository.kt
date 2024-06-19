@@ -2,6 +2,7 @@ package com.example.cofinder.Repository
 
 import android.util.Log
 import com.example.cofinder.Data.ScheduleData
+import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.UserData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -52,6 +53,30 @@ class UserRepository(private val table : DatabaseReference) {
             table.removeEventListener(listener)
         }
     }
+
+    suspend fun getAllMyteams(): Flow<List<TeamData>> = callbackFlow {
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val TeamList = mutableListOf<TeamData>()
+                for(UserSnapshow in snapshot.children) {
+                    val Team = UserSnapshow.getValue(TeamData::class.java)
+                    Team?.let {
+                        TeamList.add(it)
+                    }
+                }
+                trySend(TeamList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+        table.addValueEventListener(listener)
+        awaitClose {
+            table.removeEventListener(listener)
+        }
+    }
+
 
     suspend fun userLogin(userId: String, password: String): UserData?{
         return try {

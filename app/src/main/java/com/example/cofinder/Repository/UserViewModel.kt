@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.cofinder.Data.ScheduleData
+import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.UserData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -77,6 +78,15 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
                 _UserList.value = it
             }
         }
+    }
+
+    fun getAllMyTeams():List<TeamData> {
+        viewModelScope.launch {
+            repository.getAllMyteams().collect {
+                user.value!!.projects
+            }
+        }
+        return user.value!!.projects
     }
 
     fun userLogin(userId: String, password: String) {
