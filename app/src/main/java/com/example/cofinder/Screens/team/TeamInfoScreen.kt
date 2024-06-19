@@ -71,6 +71,7 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
     var expanded by remember{ mutableStateOf(false) }
 
     val teamNow by teamViewModel.selectedTeam.collectAsState()
+
     LazyColumn(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -223,7 +224,7 @@ fun NewPostDialog(onDismiss: () -> Unit, teamViewModel: TeamViewModel) {
                 onClick = {
                     // 게시글 저장 로직을 여기에 추가
                     val teamData = teamViewModel.selectedTeam.value // 팀 데이터를 가져오는 로직을 여기에 추가
-                    teamViewModel.InsertPost(teamData, title, content)
+                    teamViewModel.insertPost(teamData, title, content)
                     onDismiss()
                 }, colors = buttonColor1
 

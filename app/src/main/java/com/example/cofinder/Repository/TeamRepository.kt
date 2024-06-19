@@ -27,7 +27,7 @@ class TeamRepository(private val table :DatabaseReference) {
     }
 
 
-    suspend fun InsertPost(teamData: TeamData, title: String, contents: String): TeamData? {
+    suspend fun insertPost(teamData: TeamData, title: String, contents: String): TeamData? {
         return try {
             val teamid = teamData.TeamID
             val snapshot = table.child(teamid.toString()).get().await()
@@ -74,6 +74,7 @@ class TeamRepository(private val table :DatabaseReference) {
             null
         }
     }
+
 
     suspend fun getAllTeams(): Flow<List<TeamData>> = callbackFlow {
         val listener = object : ValueEventListener {

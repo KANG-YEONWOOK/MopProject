@@ -57,9 +57,9 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
         }
     }
 
-    fun InsertPost(Team: TeamData, title: String, contents: String) {
+    fun insertPost(teamData: TeamData, title: String, contents: String) {
         viewModelScope.launch {
-            repository.InsertPost(Team, title, contents)
+            repository.insertPost(teamData, title, contents)
         }
     }
 
