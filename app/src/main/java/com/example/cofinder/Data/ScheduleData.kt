@@ -6,7 +6,8 @@ data class ScheduleData(
     var min: Int,
     var schedulename: String,
     var type: Type,
-    var subject: String
+    var subject: String,
+    val timestamp: Long = System.currentTimeMillis()
 ) {
     constructor() : this(0, 0,0, "",Type.STUDY,"")
 }

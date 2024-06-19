@@ -112,6 +112,13 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
         }
     }
 
+    fun deleteSchedule(userId: String, scheduleData: ScheduleData){
+        viewModelScope.launch{
+            val scheduleAddedUser = repository.deleteSchedule(userId,scheduleData)
+            _user.value = scheduleAddedUser
+        }
+    }
+
     fun addTeam(userId: String, teamData: TeamData){
         viewModelScope.launch{
             val teamAddedUser = repository.addTeams(userId,teamData)

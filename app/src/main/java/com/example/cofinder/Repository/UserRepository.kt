@@ -128,6 +128,27 @@ class UserRepository(private val table : DatabaseReference) {
         }
     }
 
+    suspend fun deleteSchedule(userId: String, scheduleData: ScheduleData): UserData? {
+        return try {
+            val snapshot = table.child(userId).get().await()
+            val user = snapshot.getValue(UserData::class.java)
+
+            if (user != null) {
+                val schedulesSnapshot = table.child(userId).child("schedules").get().await()
+                val schedulesList = schedulesSnapshot.children.mapNotNull { it.getValue(ScheduleData::class.java) }.toMutableList()
+
+                schedulesList.removeAll { it.timestamp == scheduleData.timestamp }
+
+                table.child(userId).child("schedules").setValue(schedulesList).await()
+            }
+            return user
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Failed to delete schedule", e)
+            null
+        }
+    }
+
+
     suspend fun addTeams(userId: String, teamData: TeamData): UserData?{
         return try {
             val snapshot = table.child(userId).get().await()

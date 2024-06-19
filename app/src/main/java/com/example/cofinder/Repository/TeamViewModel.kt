@@ -57,18 +57,9 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
         }
     }
 
-    fun getTeam(teamId: String) {
-        viewModelScope.launch {
-            repository.getTeam(teamId).collect { team ->
-                _selectedTeam.value = team
-            }
-        }
-    }
-
     fun insertPost(teamData: TeamData, title: String, contents: String) {
         viewModelScope.launch {
             repository.insertPost(teamData, title, contents)
-            getTeam(teamData.TeamID.toString())
         }
     }
 

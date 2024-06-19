@@ -1,6 +1,5 @@
 package com.example.cofinder.Repository;
 
-import androidx.room.util.copy
 import com.example.cofinder.Data.PostData
 import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.UserData
@@ -11,8 +10,6 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.internal.NopCollector.emit
 import kotlinx.coroutines.tasks.await
 
 class TeamRepository(private val table :DatabaseReference) {
@@ -29,16 +26,6 @@ class TeamRepository(private val table :DatabaseReference) {
         table.child(teamData.TeamID.toString()).removeValue()
     }
 
-
-    fun getTeam(teamId: String): Flow<TeamData> = flow {
-        val snapshot = table.child(teamId).get().await()
-        val team = snapshot.getValue(TeamData::class.java)
-        if (team != null) {
-            val postsSnapshot = table.child(teamId).child("posts").get().await()
-            val posts = postsSnapshot.children.mapNotNull { it.getValue(PostData::class.java) }
-            emit(team.copy(posts = posts))
-        }
-    }
 
     suspend fun insertPost(teamData: TeamData, title: String, contents: String): TeamData? {
         return try {
