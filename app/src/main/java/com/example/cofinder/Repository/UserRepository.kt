@@ -1,5 +1,6 @@
 package com.example.cofinder.Repository
 
+import android.util.Log
 import com.example.cofinder.Data.UserData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -12,7 +13,11 @@ import kotlinx.coroutines.tasks.await
 
 class UserRepository(private val table : DatabaseReference) {
     suspend fun InsertUser(userData: UserData) {
-        table.child(userData.studentID.toString()).setValue(userData).await()
+        try {
+            table.child(userData.studentID).setValue(userData).await()
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Failed to insert user", e)
+        }
     }
 
     fun UpdateUser(userData: UserData) {
@@ -52,8 +57,10 @@ class UserRepository(private val table : DatabaseReference) {
             val snapshot = table.child(userId).get().await()
             val user = snapshot.getValue(UserData::class.java)
             if (user != null && user.password == password) {
+                Log.d("getuserinfo", "$user")
                 user
             } else {
+                Log.d("getuserinfo", "else")
                 null
             }
         } catch (e: Exception) {

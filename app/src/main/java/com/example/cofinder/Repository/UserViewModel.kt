@@ -1,5 +1,7 @@
 package com.example.cofinder.Repository
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -20,21 +22,28 @@ class UserViewModelFactory(private val repository: UserRepository): ViewModelPro
 
 class UserViewModel (private val repository: UserRepository) : ViewModel(){
 
-    var logIn = mutableStateOf(false)
-
     private var _UserList = MutableStateFlow<List<UserData>>(emptyList())
     val UserList = _UserList.asStateFlow()
 
     private val _user = MutableStateFlow<UserData?>(null)
     val user = _user.asStateFlow()
 
+    var login = mutableStateOf(false)
+
     init {
         getAllUsers()
     }
 
-    fun InsertUser(User: UserData) {
+    fun insertUser(user: UserData) {
+        Log.w("UserViewModel", "InsertUser function is called")
         viewModelScope.launch {
-            repository.InsertUser(User)
+            Log.w("UserViewModel", "Attempting to insert user")
+            try {
+                repository.InsertUser(user)
+                Log.w("UserViewModel", "User inserted successfully")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Failed to insert user", e)
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "731038161955",
+    "firebase_url": "https://cofnider-default-rtdb.firebaseio.com",
     "project_id": "cofnider",
     "storage_bucket": "cofnider.appspot.com"
   },

@@ -135,18 +135,17 @@ fun RegisterScreenContent(navController: NavController, userViewModel: UserViewM
                 .width(280.dp),
             colors = buttonColor1,
             onClick = {
+                //회원가입 시 해당 계정으로 자동로그인
                 coroutineScope.launch {
                     val newUser = UserData(studentID = userID, password = userPasswd, loginStatus = true)
                     Log.d("studentid", userID)
                     Log.d("passwd", userPasswd)
-                    userViewModel.InsertUser(newUser)
-                    navController.navigate(Routes.Login.route) {
-                        popUpTo(Routes.Login.route) {
-                            saveState = true
-                            inclusive = false
-                        }
+                    userViewModel.insertUser(newUser)
+                    userViewModel.login.value = true
+                    userViewModel.getUserInfo(userID,userPasswd)
+                    navController.navigate(Routes.Home.route){
+                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         launchSingleTop = true
-                        restoreState = true
                     }
                 }
             }) {
