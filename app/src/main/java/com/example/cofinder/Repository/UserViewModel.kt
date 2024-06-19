@@ -28,6 +28,9 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
     private val _user = MutableStateFlow<UserData?>(null)
     val user = _user.asStateFlow()
 
+    private val _registeredId = MutableStateFlow(false)
+    val registeredId = _registeredId.asStateFlow()
+
     var login = mutableStateOf(false)
 
     init {
@@ -75,10 +78,17 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
         }
     }
 
-    fun getUserInfo(userId: String, password: String) {
+    fun userLogin(userId: String, password: String) {
         viewModelScope.launch {
-            val userInfo = repository.getUserInfo(userId, password)
+            val userInfo = repository.userLogin(userId, password)
             _user.value = userInfo
+        }
+    }
+
+    fun userCheck(userId: String) {
+        viewModelScope.launch {
+            val registered = repository.userCheck(userId)
+            _registeredId.value = registered
         }
     }
 }
