@@ -1,6 +1,7 @@
 package com.example.cofinder.Screens.login
 
 import android.app.Activity
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ import com.example.cofinder.ui.theme.Typography
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.launch
 
@@ -144,6 +146,8 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
                 .width(280.dp),
                 colors = buttonColor1,
                 onClick = {
+                    Log.w("Login1","${userViewModel.getAllUsers()}")
+                    Log.w("Login2","${userViewModel.UserList}")
 //                    val nowUser = userViewModel.getUserInfo(userID, userPasswd)
 //                    if(nowUser != null) {
 //                        navController.navigate(Routes.Home.route) {
@@ -159,29 +163,42 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
 //                        userPasswd = ""
 //                    }
                     coroutineScope.launch {
-                        var loginSuccessful = false
-
-                        userViewModel.UserList.collect { userList ->
-                            for (user in userList) {
-                                if (user.studentID == userID && user.password == userPasswd) {
-                                    userViewModel.user.value?.loginStatus = true
-                                    loginSuccessful = true
-                                    navController.navigate(Routes.Home.route) {
-                                popUpTo(Routes.Home.route) {
-                                    saveState = true
-                                    inclusive = false
-                                }
+                        userViewModel.getUserInfo(userID,userPasswd)
+                        delay(1000) //데이터베이스에 반영될 때까지 기다림
+                        if(userViewModel.user.value != null){
+                            userViewModel.login.value = true
+                            navController.navigate(Routes.Home.route){
+                                popUpTo(navController.graph.startDestinationId) { inclusive = true }
                                 launchSingleTop = true
-                                restoreState = true
-                            }
-                                    break
-                                }
-                            }
-                            if (!loginSuccessful) {
-                                Toast.makeText(context, "로그인 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT)
-                                    .show()
                             }
                         }
+                        else{
+                            Toast.makeText(context, "로그인 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+//                        var loginSuccessful = false
+//
+//                        userViewModel.UserList.collect { userList ->
+//                            for (user in userList) {
+//                                if (user.studentID == userID && user.password == userPasswd) {
+//                                    userViewModel.user.value?.loginStatus = true
+//                                    loginSuccessful = true
+//                                    navController.navigate(Routes.Home.route) {
+//                                popUpTo(Routes.Home.route) {
+//                                    saveState = true
+//                                    inclusive = false
+//                                }
+//                                launchSingleTop = true
+//                                restoreState = true
+//                            }
+//                                    break
+//                                }
+//                            }
+//                            if (!loginSuccessful) {
+//                                Toast.makeText(context, "로그인 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT)
+//                                    .show()
+//                            }
+//                        }
                     }
                 }) {
                 Text("로그인", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))

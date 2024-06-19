@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -24,30 +28,46 @@ import com.example.cofinder.Screens.login.LoginScreen
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 
+@Composable
+fun rememberViewModelStoreOwner(): ViewModelStoreOwner {
+    val context = LocalContext.current
+    return remember(context) { context as ViewModelStoreOwner }
+}
 
+val LocalNavGraphViewModelStoreOwner =
+    staticCompositionLocalOf<ViewModelStoreOwner> {
+        error("Undefined")
+    }
 @Composable
 fun Main(navController: NavHostController) {
-
+    val navStoreOwner = rememberViewModelStoreOwner()
     val context = LocalContext.current
-    val usertable = Firebase.database.getReference("cofnider/user")
-    val userviewModel: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository(usertable)))
 
-    val teamtable = Firebase.database.getReference("cofnider/team")
-    val teamviewModel: TeamViewModel = viewModel(factory = TeamViewModelFactory(TeamRepository(teamtable)))
+    val userTable = Firebase.database.getReference("Cofinder/user")
+    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(UserRepository(userTable)))
 
-    Scaffold(bottomBar = {
-        if(true) //로그인 상태에만 BottomBar렌더링
-            BottomBar(navController = navController)}){
-        Column(modifier = Modifier.padding(it)) {
-            NavHost(
-                navController = navController,
-                startDestination = Routes.Login.route
-            ){
-                composable(Routes.Login.route){
-                    LoginScreen(navController = navController, userviewModel)
+    val teamTable = Firebase.database.getReference("Cofinder/team")
+    val teamViewModel: TeamViewModel = viewModel(factory = TeamViewModelFactory(TeamRepository(teamTable)))
+
+    CompositionLocalProvider(
+        LocalNavGraphViewModelStoreOwner provides navStoreOwner
+    ) {
+
+        Scaffold(bottomBar = {
+            if (userViewModel.login.value) //로그인 상태에만 BottomBar렌더링
+                BottomBar(navController = navController)
+        }) {
+            Column(modifier = Modifier.padding(it)) {
+                NavHost(
+                    navController = navController,
+                    startDestination = Routes.Login.route
+                ) {
+                    composable(Routes.Login.route) {
+                        LoginScreen(navController = navController, userViewModel)
+                    }
+
+                    MainNavGraph(navController, userViewModel, teamViewModel)
                 }
-
-                MainNavGraph(navController, userviewModel, teamviewModel)
             }
         }
     }

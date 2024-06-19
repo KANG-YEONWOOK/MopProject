@@ -44,16 +44,16 @@ import com.example.cofinder.ui.theme.Typography
 
 
 @Composable
-fun TeamInfoScreen(navController: NavController, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
+fun TeamInfoScreen(navController: NavController, teamViewModel: TeamViewModel) {
     Scaffold(
         topBar = { TopBar(navController) }
     ) {
-        TeamInfoScreenContent(navController, contentPadding = it, teamViewModel)
+        TeamInfoScreenContent(contentPadding = it, teamViewModel)
     }
 }
 
 @Composable
-fun TeamInfoScreenContent(navController: NavController, contentPadding:PaddingValues, teamViewModel: TeamViewModel) {
+fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewModel) {
 
     var expanded by remember{ mutableStateOf(false) }
 

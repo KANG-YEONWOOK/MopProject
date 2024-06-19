@@ -79,7 +79,7 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel, teamV
                     label = { Text("검색") }
                 )
                 Button(
-                    onClick = {  },
+                    onClick = { Log.d("userNow", "${userViewModel.user.value}") },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.darkgreen)
                     ),

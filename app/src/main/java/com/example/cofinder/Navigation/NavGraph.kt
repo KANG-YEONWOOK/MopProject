@@ -1,5 +1,6 @@
 package com.example.cofinder.Navigation
 
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -13,7 +14,7 @@ import com.example.cofinder.Screens.schedule.ScheduleScreen
 import com.example.cofinder.Screens.team.TeamInfoScreen
 import com.example.cofinder.Screens.team.TeamMainScreen
 
-fun NavGraphBuilder.MainNavGraph(navController: NavHostController, userViewModel: UserViewModel, teamViewModel: TeamViewModel){
+fun NavGraphBuilder.MainNavGraph(navController: NavHostController, userViewModel: UserViewModel , teamViewModel: TeamViewModel){
 
     navigation(startDestination = "Home", route = "Main"){
         composable(route=Routes.Login.route){
