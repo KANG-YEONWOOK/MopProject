@@ -125,6 +125,29 @@ class TeamRepository(private val table :DatabaseReference) {
             table.removeEventListener(listener)
         }
     }
+    suspend fun findTeam(teamName: String): Flow<List<TeamData>> = callbackFlow {
+        val query = table.orderByChild("name").equalTo(teamName)
 
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val teams = mutableListOf<TeamData>()
+                snapshot.children.forEach { dataSnapshot ->
+                    val team = dataSnapshot.getValue(TeamData::class.java)
+                    if (team != null) {
+                        teams.add(team)
+                    }
+                }
+                trySend(teams).isSuccess
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                close(error.toException())
+            }
+        }
+
+        query.addValueEventListener(listener)
+
+        awaitClose { query.removeEventListener(listener) }
+    }
 
 }

@@ -117,4 +117,11 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
         }
     }
 
+    fun findTeam(teamName: String){
+        viewModelScope.launch {
+            repository.findTeam(teamName).collect{
+                _teamList.value = it
+            }
+        }
+    }
 }
