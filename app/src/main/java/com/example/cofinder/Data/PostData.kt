@@ -1,6 +1,6 @@
 package com.example.cofinder.Data
 
-class PostData(
+data class PostData(
     val title: String = "",
     val contents: String = "",
     val timestamp: Long = System.currentTimeMillis()

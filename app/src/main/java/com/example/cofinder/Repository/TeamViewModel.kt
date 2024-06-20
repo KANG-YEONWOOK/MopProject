@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.cofinder.Data.PostData
 import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.UserData
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,11 +33,15 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
     private var _teamList = MutableStateFlow<List<TeamData>>(emptyList())
     val teamList = _teamList.asStateFlow()
 
+    private var _postList = MutableStateFlow<List<PostData>>(emptyList())
+    val postList = _postList.asStateFlow()
+
     private val _team = MutableStateFlow<TeamData?>(null)
     val team = _team.asStateFlow()
 
     init {
         getAllTeams()
+        getAllPosts()
     }
 
     fun InsertTeam(Team: TeamData) {
@@ -57,9 +62,9 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
         }
     }
 
-    fun insertPost(teamData: TeamData, title: String, contents: String) {
+    fun insertPost(teamData: TeamData, postData: PostData) {
         viewModelScope.launch {
-            repository.insertPost(teamData, title, contents)
+            repository.insertPost(teamData, postData)
         }
     }
 
@@ -103,4 +108,13 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
             }
         }
     }
+
+    fun getAllPosts() {
+        viewModelScope.launch {
+            repository.getAllPosts().collect {
+                _postList.value = it
+            }
+        }
+    }
+
 }

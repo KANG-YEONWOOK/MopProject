@@ -31,6 +31,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cofinder.Bars.TopBar
+import com.example.cofinder.Data.PostData
 import com.example.cofinder.Data.ScheduleData
 import com.example.cofinder.Data.TeamData
 import com.example.cofinder.R
@@ -69,8 +71,12 @@ fun TeamInfoScreen(navController: NavController, teamViewModel: TeamViewModel) {
 fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewModel) {
 
     var expanded by remember{ mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        teamViewModel.getAllTeams()
+    }
 
     val teamNow by teamViewModel.selectedTeam.collectAsState()
+    val postlist by teamViewModel.postList.collectAsState()
 
     LazyColumn(
         contentPadding = contentPadding,
@@ -86,8 +92,9 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
         item{
             Text("게시글", style = Typography.bodyLarge, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
             Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
+            PostAddButton(teamViewModel)
         }
-        if(teamNow.post.isEmpty()){
+        if(postlist.isEmpty()){
             item{
                 Box(modifier = Modifier
                     .padding(12.dp)
@@ -99,13 +106,13 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Text("게시글이 없습니다", style = Typography.bodyLarge, color = colorResource(id = R.color.middlegreen), modifier = Modifier.padding(12.dp))
-                        PostAddButton(teamViewModel)
+//                        PostAddButton(teamViewModel)
                     }
 
                 }
             }
         }else{
-            items(teamNow.post){post->
+            items(postlist){post->
                 Box(modifier = Modifier
                     .border(1.dp, colorResource(id = R.color.greengray))
                     .background(colorResource(id = R.color.white))
@@ -120,7 +127,7 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
                                 .padding(start = 20.dp, end = 20.dp), thickness = 1.dp)
                             Text(post.contents, style = Typography.bodyMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
                         }
-                        PostAddButton(teamViewModel)
+//                        PostAddButton(teamViewModel)
                     }
                 }
             }
@@ -224,7 +231,8 @@ fun NewPostDialog(onDismiss: () -> Unit, teamViewModel: TeamViewModel) {
                 onClick = {
                     // 게시글 저장 로직을 여기에 추가
                     val teamData = teamViewModel.selectedTeam.value // 팀 데이터를 가져오는 로직을 여기에 추가
-                    teamViewModel.insertPost(teamData, title, content)
+                    var postData = PostData(title, content)
+                    teamViewModel.insertPost(teamData, postData)
                     onDismiss()
                 }, colors = buttonColor1
 

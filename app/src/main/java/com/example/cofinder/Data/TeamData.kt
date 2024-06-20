@@ -1,6 +1,6 @@
 package com.example.cofinder.Data
 
-class TeamData(
+data class TeamData(
     var TeamID: Long,
     var name: String,
     var maxNumber: Int,
