@@ -83,10 +83,10 @@ class UserViewModel (private val repository: UserRepository) : ViewModel(){
         }
     }
 
-    fun getAllMyTeams() {
+    fun getAllMyTeams(userID: String) {
         viewModelScope.launch {
-            repository.getAllMyteams().collect {
-                _myTeam.value = user.value!!.projects
+            repository.getAllMyteams(userID).collect {
+                _myTeam.value = it
             }
         }
     }
