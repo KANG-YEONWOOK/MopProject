@@ -68,9 +68,8 @@ fun TeamInfoScreen(navController: NavController, teamViewModel: TeamViewModel) {
 }
 
 @Composable
-fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewModel) {
+fun TeamInfoScreenContent(contentPadding: PaddingValues, teamViewModel: TeamViewModel) {
 
-    var expanded by remember{ mutableStateOf(false) }
     LaunchedEffect(Unit) {
         teamViewModel.getAllTeams()
         teamViewModel.getAllPosts(teamViewModel.selectedTeam.value.TeamID)
@@ -79,59 +78,56 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
     val teamNow by teamViewModel.selectedTeam.collectAsState()
     val posts = teamViewModel.postList.collectAsState().value
 
-    Log.e("posts", "${posts}")
-
+    Log.e("posts", "$posts")
 
     LazyColumn(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item{
+        item {
             Text(teamNow.name, style = Typography.titleMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(8.dp))
             Divider(modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp), thickness = 3.dp)
         }
-        item{
+        item {
             Text("게시글", style = Typography.bodyLarge, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
             Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
             PostAddButton(teamViewModel)
         }
-        if(posts.isEmpty()){
-            item{
+        if (posts.isEmpty()) {
+            item {
                 Box(modifier = Modifier
                     .padding(12.dp)
                     .border(1.dp, colorResource(id = R.color.greengray))
                     .background(colorResource(id = R.color.white))
-                    .fillMaxWidth()){
+                    .fillMaxWidth()) {
                     Column(modifier = Modifier
                         .fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         Text("게시글이 없습니다", style = Typography.bodyLarge, color = colorResource(id = R.color.middlegreen), modifier = Modifier.padding(12.dp))
-//                        PostAddButton(teamViewModel)
                     }
-
                 }
             }
-        }else{
-            items(posts){post->
+        } else {
+            items(posts) { post ->
+                var expanded by remember { mutableStateOf(false) }
                 Box(modifier = Modifier
                     .border(1.dp, colorResource(id = R.color.greengray))
                     .background(colorResource(id = R.color.white))
                     .fillMaxWidth()
-                    .clickable { expanded != expanded }){
+                    .clickable { expanded = !expanded }) {
                     Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.fillMaxSize()) {
                         Text(post.title, style = Typography.bodyLarge, color = colorResource(id = R.color.middlegreen), modifier = Modifier.padding(12.dp))
-                        if(expanded){
+                        if (expanded) {
                             Divider(modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 20.dp, end = 20.dp), thickness = 1.dp)
                             Text(post.contents, style = Typography.bodyMedium, color = colorResource(id = R.color.darkgreen), modifier = Modifier.padding(12.dp))
                         }
-//                        PostAddButton(teamViewModel)
                     }
                 }
             }
