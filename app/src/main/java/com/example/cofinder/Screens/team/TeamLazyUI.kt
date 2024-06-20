@@ -1,6 +1,7 @@
 package com.example.cofinder.Screens.team
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -54,6 +56,7 @@ fun TeamList(teams: StateFlow<List<TeamData>>, userData: UserData, userViewModel
 @Composable
 fun TeamCard(team: TeamData, userData: UserData, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
     var expanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     ElevatedCard(
         modifier = Modifier
@@ -84,9 +87,14 @@ fun TeamCard(team: TeamData, userData: UserData, userViewModel: UserViewModel, t
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = { /* 여기서 팀 참가 로직 처리 */
-                        userViewModel.addTeam(userViewModel.user.value!!.studentID,team)
-                        teamViewModel.addUser(userViewModel.user.value!!, team)
-                        Log.d("DB", "팀 참가")},
+                        if(team.maxNumber <= team.users.size){
+                            Toast.makeText(context, "해당 팀의 모집은 마감되었습니다!", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            userViewModel.addTeam(userViewModel.user.value!!.studentID,team)
+                            teamViewModel.addUser(userViewModel.user.value!!, team)
+                            Log.d("DB", "팀 참가")
+                        } },
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.darkgreen)
