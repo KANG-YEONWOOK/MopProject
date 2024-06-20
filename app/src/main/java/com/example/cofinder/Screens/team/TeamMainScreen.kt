@@ -92,13 +92,6 @@ fun TeamCard2(team: TeamData, navController: NavController, teamViewModel: TeamV
                 Text(text = "${team.type}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Text(text = team.name, fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(text = "${team.users.size}/${team.maxNumber}", fontSize = 16.sp)
-            }
         }
     }
 }
