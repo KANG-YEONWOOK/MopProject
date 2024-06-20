@@ -116,14 +116,14 @@ class TeamRepository(private val table :DatabaseReference) {
     }
 
     suspend fun findTeam(teamName: String): Flow<List<TeamData>> = callbackFlow {
-        val query = table.orderByChild("name").equalTo(teamName)
+        val query = table.orderByChild("name")
 
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val teams = mutableListOf<TeamData>()
                 snapshot.children.forEach { dataSnapshot ->
                     val team = dataSnapshot.getValue(TeamData::class.java)
-                    if (team != null) {
+                    if (team != null && team.name.contains(teamName, ignoreCase = true)) {
                         teams.add(team)
                     }
                 }
