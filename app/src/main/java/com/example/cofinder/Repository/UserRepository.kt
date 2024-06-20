@@ -54,17 +54,19 @@ class UserRepository(private val table : DatabaseReference) {
         }
     }
 
-    suspend fun getAllMyteams(): Flow<List<TeamData>> = callbackFlow {
+    suspend fun getAllMyteams(userID: String): Flow<List<TeamData>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val TeamList = mutableListOf<TeamData>()
-                for(UserSnapshow in snapshot.children) {
-                    val Team = UserSnapshow.getValue(TeamData::class.java)
-                    Team?.let {
-                        TeamList.add(it)
+                val projectList = mutableListOf<TeamData>()
+                for(UserSnapshot in snapshot.children) {
+                    val user = UserSnapshot.getValue(UserData::class.java)
+                    if (user != null && user.studentID == userID) {
+                        user.projects?.let { projects ->
+                            projectList.addAll(projects)
+                        }
                     }
                 }
-                trySend(TeamList)
+                trySend(projectList)
             }
 
             override fun onCancelled(error: DatabaseError) {

@@ -46,7 +46,7 @@ fun TeamMainScreen(navController: NavController, userViewModel: UserViewModel, t
 @Composable
 fun TeamMainScreenContent(navController: NavController, contentPadding: PaddingValues, userViewModel: UserViewModel, teamViewModel: TeamViewModel) {
     LaunchedEffect(Unit){
-        userViewModel.getAllMyTeams()
+        userViewModel.getAllMyTeams(userViewModel.user.value!!.studentID)
     }
 
     Column(modifier = Modifier.padding(contentPadding),
