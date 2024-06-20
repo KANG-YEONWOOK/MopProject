@@ -8,6 +8,7 @@ import com.example.cofinder.Data.PostData
 import com.example.cofinder.Data.TeamData
 import com.example.cofinder.Data.UserData
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -41,7 +42,7 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
 
     init {
         getAllTeams()
-        getAllPosts()
+        getAllPosts(selectedTeam.value.TeamID)
     }
 
     fun InsertTeam(Team: TeamData) {
@@ -109,9 +110,9 @@ class TeamViewModel (private val repository: TeamRepository) : ViewModel(){
         }
     }
 
-    fun getAllPosts() {
+    fun getAllPosts(teamID: Long) {
         viewModelScope.launch {
-            repository.getAllPosts().collect {
+            repository.getAllPosts(teamID).collect {
                 _postList.value = it
             }
         }

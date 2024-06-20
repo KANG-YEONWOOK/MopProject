@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
@@ -37,10 +38,10 @@ class TeamRepository(private val table :DatabaseReference) {
 //                val post = PostData(title, contents)
 //                val postList = team.post.toMutableList()
 //                postList.add(post)
-                table.child(teamid.toString()).child("posts").setValue(postData.timestamp).await()
+                table.child(teamid.toString()).child("posts").child(postData.timestamp.toString()).setValue(postData).await()
             } else {
 //                val postList = listOf(PostData(title, contents))
-                table.child(teamid.toString()).child("posts").setValue(postData.timestamp).await()
+                table.child(teamid.toString()).child("posts").child(postData.timestamp.toString()).setValue(postData).await()
             }
             return team
         } catch (e: Exception) {
@@ -99,32 +100,21 @@ class TeamRepository(private val table :DatabaseReference) {
         }
     }
 
-    suspend fun getAllPosts(): Flow<List<PostData>> = callbackFlow {
+    fun getAllPosts(teamID: Long): Flow<List<PostData>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val allPostsList = mutableListOf<PostData>()
-                for (teamSnapshot in snapshot.children) {
-                    val postsSnapshot = teamSnapshot.child("posts")
-                    for (postSnapshot in postsSnapshot.children) {
-                        val post = postSnapshot.getValue(PostData::class.java)
-                        post?.let {
-                            allPostsList.add(it)
-                        }
-                    }
-                }
-                trySend(allPostsList)
+                val posts = snapshot.children.mapNotNull { it.getValue(PostData::class.java) }
+                trySend(posts).isSuccess
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle the error if needed
-                close(error.toException())
+                // Handle possible errors.
             }
         }
-        table.addValueEventListener(listener)
-        awaitClose {
-            table.removeEventListener(listener)
-        }
+        table.child(teamID.toString()).child("posts").addValueEventListener(listener)
+        awaitClose { table.child(teamID.toString()).child("posts").removeEventListener(listener) }
     }
+
     suspend fun findTeam(teamName: String): Flow<List<TeamData>> = callbackFlow {
         val query = table.orderByChild("name").equalTo(teamName)
 

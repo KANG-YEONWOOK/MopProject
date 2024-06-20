@@ -73,10 +73,14 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
     var expanded by remember{ mutableStateOf(false) }
     LaunchedEffect(Unit) {
         teamViewModel.getAllTeams()
+        teamViewModel.getAllPosts(teamViewModel.selectedTeam.value.TeamID)
     }
 
     val teamNow by teamViewModel.selectedTeam.collectAsState()
-    val postlist by teamViewModel.postList.collectAsState()
+    val posts = teamViewModel.postList.collectAsState().value
+
+    Log.e("posts", "${posts}")
+
 
     LazyColumn(
         contentPadding = contentPadding,
@@ -94,7 +98,7 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
             Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
             PostAddButton(teamViewModel)
         }
-        if(postlist.isEmpty()){
+        if(posts.isEmpty()){
             item{
                 Box(modifier = Modifier
                     .padding(12.dp)
@@ -112,7 +116,7 @@ fun TeamInfoScreenContent(contentPadding:PaddingValues, teamViewModel: TeamViewM
                 }
             }
         }else{
-            items(postlist){post->
+            items(posts){post->
                 Box(modifier = Modifier
                     .border(1.dp, colorResource(id = R.color.greengray))
                     .background(colorResource(id = R.color.white))
