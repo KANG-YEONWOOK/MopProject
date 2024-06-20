@@ -291,7 +291,7 @@ fun ScheduleScreenContent(userViewModel: UserViewModel, contentPadding: PaddingV
         }
         scheduleNow = schedules.filter { it.date!!.toLong() == selectedDate }
         items(scheduleNow) {
-            ScheduleCard(it)
+            ScheduleCard(userViewModel, it)
         }
     }
 

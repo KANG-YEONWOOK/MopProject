@@ -26,11 +26,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.cofinder.Data.ScheduleData
 import com.example.cofinder.R
+import com.example.cofinder.Repository.UserViewModel
 import com.example.cofinder.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleCard(scheduleData: ScheduleData) {
+fun ScheduleCard(userViewModel: UserViewModel, scheduleData: ScheduleData) {
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -75,7 +76,7 @@ fun ScheduleCard(scheduleData: ScheduleData) {
                 Column(modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
-                    ScheduleCancelButton()
+                    ScheduleCancelButton(userViewModel, scheduleData)
                 }
             }
         }
@@ -83,7 +84,7 @@ fun ScheduleCard(scheduleData: ScheduleData) {
 }
 
 @Composable
-fun ScheduleCancelButton() {
+fun ScheduleCancelButton(userViewModel: UserViewModel, scheduleData: ScheduleData) {
     val buttonColor = ButtonDefaults.buttonColors(
         containerColor = colorResource(R.color.middlegreen),
         contentColor = Color.White,
@@ -94,7 +95,7 @@ fun ScheduleCancelButton() {
         .padding(12.dp)
         .width(120.dp),
         colors = buttonColor,
-        onClick = { /*비어있음*/ }) {
+        onClick = { userViewModel.deleteSchedule(userViewModel.user.value!!.studentID, scheduleData) }) {
         Text("일정 삭제", style = Typography.bodyMedium, modifier = Modifier.padding(6.dp))
     }
 }

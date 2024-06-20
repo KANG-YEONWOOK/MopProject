@@ -59,16 +59,16 @@ import com.example.cofinder.ui.theme.Typography
 
 
 @Composable
-fun TeamInfoScreen(navController: NavController, teamViewModel: TeamViewModel) {
+fun TeamInfoScreen(navController: NavController, teamViewModel: TeamViewModel, userViewModel: UserViewModel) {
     Scaffold(
         topBar = { TopBar(navController) }
     ) {
-        TeamInfoScreenContent(contentPadding = it, teamViewModel)
+        TeamInfoScreenContent(contentPadding = it, teamViewModel, userViewModel)
     }
 }
 
 @Composable
-fun TeamInfoScreenContent(contentPadding: PaddingValues, teamViewModel: TeamViewModel) {
+fun TeamInfoScreenContent(contentPadding: PaddingValues, teamViewModel: TeamViewModel, userViewModel: UserViewModel) {
 
     LaunchedEffect(Unit) {
         teamViewModel.getAllTeams()
@@ -134,7 +134,7 @@ fun TeamInfoScreenContent(contentPadding: PaddingValues, teamViewModel: TeamView
         }
 
         items(teamNow.schedule) { schedule ->
-            TeamScheduleCard(schedule)
+            TeamScheduleCard(userViewModel, schedule)
         }
     }
 }
@@ -253,7 +253,7 @@ fun NewPostDialog(onDismiss: () -> Unit, teamViewModel: TeamViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TeamScheduleCard( scheduleData:ScheduleData ) {
+fun TeamScheduleCard(userViewModel: UserViewModel, scheduleData:ScheduleData ) {
 
     var expanded by remember{ mutableStateOf(false) }
 
@@ -302,7 +302,7 @@ fun TeamScheduleCard( scheduleData:ScheduleData ) {
                 Column(modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally) {
-                    ScheduleCancelButton()
+                    ScheduleCancelButton(userViewModel, scheduleData)
                 }
             }
         }
