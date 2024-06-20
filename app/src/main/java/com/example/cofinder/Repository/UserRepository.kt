@@ -79,6 +79,31 @@ class UserRepository(private val table : DatabaseReference) {
         }
     }
 
+    suspend fun getAllMySchedules(userID: String): Flow<List<ScheduleData>> = callbackFlow {
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val scheduleList = mutableListOf<ScheduleData>()
+                for(UserSnapshot in snapshot.children) {
+                    val user = UserSnapshot.getValue(UserData::class.java)
+                    if (user != null && user.studentID == userID) {
+                        user.schedules?.let { schedules ->
+                            scheduleList.addAll(schedules)
+                        }
+                    }
+                }
+                trySend(scheduleList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+        table.addValueEventListener(listener)
+        awaitClose {
+            table.removeEventListener(listener)
+        }
+    }
+
 
     suspend fun userLogin(userId: String, password: String): UserData?{
         return try {
